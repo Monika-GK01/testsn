@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_user_role">
+    <sys_user_role action="INSERT_OR_UPDATE">
+        <assignable_by/>
+        <can_delegate>true</can_delegate>
+        <description/>
+        <elevated_privilege>false</elevated_privilege>
+        <federated_id>JCjjvJeiC6LpxUyS9BjiaZ3oBwd7t/cOFIUWeMk6mT8=</federated_id>
+        <grantable>true</grantable>
+        <includes_roles/>
+        <name>x_2091449_manage_0.manager</name>
+        <scoped_admin>false</scoped_admin>
+        <suffix>manager</suffix>
+        <sys_class_name>sys_user_role</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-07-06 20:05:03</sys_created_on>
+        <sys_id>794a0a6b93b543d09b437af08bba101d</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>x_2091449_manage_0.manager</sys_name>
+        <sys_package display_value="managementsys" source="x_2091449_manage_0">d54ac66b93b543d09b437af08bba109e</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="managementsys">d54ac66b93b543d09b437af08bba109e</sys_scope>
+        <sys_update_name>sys_user_role_794a0a6b93b543d09b437af08bba101d</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-07-06 20:05:03</sys_updated_on>
+    </sys_user_role>
+</record_update>

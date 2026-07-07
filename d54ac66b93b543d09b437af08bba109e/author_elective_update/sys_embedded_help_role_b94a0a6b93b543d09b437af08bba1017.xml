@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_embedded_help_role">
+    <sys_embedded_help_role action="DELETE">
+        <order>1000</order>
+        <role display_value="x_2091449_manage_0.visitor" name="x_2091449_manage_0.visitor">f14a0a6b93b543d09b437af08bba1015</role>
+        <sys_class_name>sys_embedded_help_role</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-07-06 20:05:03</sys_created_on>
+        <sys_id>b94a0a6b93b543d09b437af08bba1017</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>f14a0a6b93b543d09b437af08bba1015</sys_name>
+        <sys_package display_value="managementsys" source="x_2091449_manage_0">d54ac66b93b543d09b437af08bba109e</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="managementsys">d54ac66b93b543d09b437af08bba109e</sys_scope>
+        <sys_update_name>sys_embedded_help_role_b94a0a6b93b543d09b437af08bba1017</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-07-06 20:05:03</sys_updated_on>
+    </sys_embedded_help_role>
+    <sys_update_version action="INSERT_OR_UPDATE">
+        <action>DELETE</action>
+        <application display_value="managementsys">d54ac66b93b543d09b437af08bba109e</application>
+        <file_path/>
+        <instance_id>85dcfe199329cb10c4e8ddd548373cde</instance_id>
+        <instance_name>dev407039</instance_name>
+        <name>sys_embedded_help_role_b94a0a6b93b543d09b437af08bba1017</name>
+        <payload><![CDATA[<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_embedded_help_role"><sys_embedded_help_role action="INSERT_OR_UPDATE"><order>1000</order><role display_value="x_2091449_manage_0.visitor" name="x_2091449_manage_0.visitor">f14a0a6b93b543d09b437af08bba1015</role><sys_class_name>sys_embedded_help_role</sys_class_name><sys_created_by>admin</sys_created_by><sys_created_on>2026-07-06 20:05:03</sys_created_on><sys_id>b94a0a6b93b543d09b437af08bba1017</sys_id><sys_mod_count>0</sys_mod_count><sys_name>f14a0a6b93b543d09b437af08bba1015</sys_name><sys_package display_value="managementsys" source="x_2091449_manage_0">d54ac66b93b543d09b437af08bba109e</sys_package><sys_policy/><sys_scope display_value="managementsys">d54ac66b93b543d09b437af08bba109e</sys_scope><sys_update_name>sys_embedded_help_role_b94a0a6b93b543d09b437af08bba1017</sys_update_name><sys_updated_by>admin</sys_updated_by><sys_updated_on>2026-07-06 20:05:03</sys_updated_on></sys_embedded_help_role></record_update>]]></payload>
+        <payload_hash>-1922154768</payload_hash>
+        <record_name>f14a0a6b93b543d09b437af08bba1015</record_name>
+        <reverted_from/>
+        <source/>
+        <source_table>sys_upgrade_history</source_table>
+        <state>previous</state>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-07-06 20:37:05</sys_created_on>
+        <sys_id>7a9152a793f543d09b437af08bba104c</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_recorded_at>19f3926164b0000001</sys_recorded_at>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-07-06 20:37:05</sys_updated_on>
+        <type>Embedded Help Role Priority</type>
+        <update_guid>3a9152a7a6f543d01a6e904fb0aedf4c</update_guid>
+        <update_guid_history>3a9152a7a6f543d01a6e904fb0aedf4c:-1922154768</update_guid_history>
+    </sys_update_version>
+    <sys_metadata_delete action="INSERT_OR_UPDATE">
+        <sys_audit_delete/>
+        <sys_class_name>sys_metadata_delete</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-07-06 20:37:05</sys_created_on>
+        <sys_db_object display_value="" name="sys_embedded_help_role">sys_embedded_help_role</sys_db_object>
+        <sys_id>59b0f57561fe49d898e59ebb6f7c6c40</sys_id>
+        <sys_metadata>b94a0a6b93b543d09b437af08bba1017</sys_metadata>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>f14a0a6b93b543d09b437af08bba1015</sys_name>
+        <sys_package display_value="managementsys" source="x_2091449_manage_0">d54ac66b93b543d09b437af08bba109e</sys_package>
+        <sys_parent/>
+        <sys_policy/>
+        <sys_scope display_value="managementsys">d54ac66b93b543d09b437af08bba109e</sys_scope>
+        <sys_scope_delete display_value="">3ee6e3427af24e19b4b8a59149ca70f1</sys_scope_delete>
+        <sys_update_name>sys_embedded_help_role_b94a0a6b93b543d09b437af08bba1017</sys_update_name>
+        <sys_update_version display_value="sys_embedded_help_role_b94a0a6b93b543d09b437af08bba1017">7a9152a793f543d09b437af08bba104c</sys_update_version>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-07-06 20:37:05</sys_updated_on>
+    </sys_metadata_delete>
+</record_update>
