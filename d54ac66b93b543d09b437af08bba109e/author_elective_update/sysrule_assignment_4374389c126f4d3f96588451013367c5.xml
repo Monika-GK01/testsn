@@ -1,0 +1,374 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sysrule_assignment">
+  <sysrule_assignment action="DELETE">
+    <sys_id>4374389c126f4d3f96588451013367c5</sys_id>
+    <sys_scope display_value="x_2091449_manage_0">d54ac66b93b543d09b437af08bba109e</sys_scope>
+    <sys_update_name>sysrule_assignment_4374389c126f4d3f96588451013367c5</sys_update_name>
+    <active>true</active>
+    <condition>assignment_group=^EQ</condition>
+    <description>Intelligent routing engine for Consumer Cases. Evaluates complaint category, product category, store location, region, priority, and escalation level to route cases to the correct queue: Quality Team (critical defects, food safety), Regional Support (escalations, high-priority regional), Refund Team (billing/overcharge), Logistics (delivery issues), Store Support (in-store/staff complaints), Warehouse (moderate product returns), or Customer Care (default).</description>
+    <match_conditions>ALL</match_conditions>
+    <name>Consumer Case Intelligent Routing</name>
+    <order>100</order>
+    <script><![CDATA[/**
+ * Intelligent Consumer Case Routing Script
+ *
+ * Evaluates the following criteria to determine the correct assignment group:
+ * 1. Complaint Category (billing, delivery, product quality, customer service)
+ * 2. Product Category (electronics, clothing, food, home & garden)
+ * 3. Store Location (retail_store reference)
+ * 4. Region (from store's region field: north, south, east, west, central)
+ * 5. Priority (1=Critical, 2=High, 3=Moderate, 4=Low)
+ * 6. Severity/Escalation Level (none, tier_1, tier_2, tier_3, management)
+ *
+ * Routing Decision Matrix:
+ * - Quality Team: Critical priority product issues, safety concerns, high-severity defects
+ * - Regional Support: Escalated cases (tier_2+), high-priority regional issues
+ * - Refund Team: Billing & Pricing complaints, overcharge disputes
+ * - Logistics: Delivery Issues, late delivery, shipping problems
+ * - Store Support: In-store complaints, customer service, staff behavior issues
+ * - Warehouse: Moderate/low priority product quality, returns requiring inspection
+ * - Customer Care: Default catch-all for unmatched cases
+ */
+
+// Gather routing criteria
+var complaintCategory = current.complaint_category.getDisplayValue() || '';
+var productCategory = current.product_category.getDisplayValue() || '';
+var productDepartment = '';
+var storeRegion = '';
+var storeType = '';
+var priority = parseInt(current.priority) || 4;
+var escalationLevel = current.escalation_level + '';
+var channel = current.channel + '';
+
+// Dot-walk through references to get classification data
+if (!current.retail_store.nil()) {
+    storeRegion = current.retail_store.region + '';
+    storeType = current.retail_store.store_type + '';
+}
+
+if (!current.product_category.nil()) {
+    productDepartment = current.product_category.department + '';
+}
+
+// Track whether assignment was made
+var assigned = false;
+
+// ===========================
+// RULE 1: Critical Priority + Product Issues → Quality Team
+// Immediate quality/safety response for critical defects
+// ===========================
+if (!assigned && priority == 1 &&
+    (complaintCategory == 'Product Quality' ||
+     complaintCategory == 'Defective Product')) {
+    current.assignment_group.setDisplayValue('Quality Team');
+    assigned = true;
+}
+
+// ===========================
+// RULE 2: High Escalation (Tier 2+) → Regional Support
+// Escalated cases need regional management oversight
+// ===========================
+if (!assigned &&
+    (escalationLevel == 'tier_2' ||
+     escalationLevel == 'tier_3' ||
+     escalationLevel == 'management')) {
+    current.assignment_group.setDisplayValue('Regional Support');
+    assigned = true;
+}
+
+// ===========================
+// RULE 3: Billing & Pricing Complaints → Refund Team
+// All financial disputes, overcharges, and billing errors
+// ===========================
+if (!assigned &&
+    (complaintCategory == 'Billing & Pricing' ||
+     complaintCategory == 'Overcharge')) {
+    current.assignment_group.setDisplayValue('Refund Team');
+    assigned = true;
+}
+
+// ===========================
+// RULE 4: Delivery Complaints → Logistics
+// All shipping and delivery-related issues
+// ===========================
+if (!assigned &&
+    (complaintCategory == 'Delivery Issues' ||
+     complaintCategory == 'Late Delivery')) {
+    current.assignment_group.setDisplayValue('Logistics');
+    assigned = true;
+}
+
+// ===========================
+// RULE 5: Product Quality Routing (by Priority/Severity)
+// High priority → Quality Team (investigation)
+// Lower priority → Warehouse (inspection/returns)
+// ===========================
+if (!assigned &&
+    (complaintCategory == 'Product Quality' ||
+     complaintCategory == 'Defective Product')) {
+    if (priority <= 2) {
+        current.assignment_group.setDisplayValue('Quality Team');
+    } else {
+        current.assignment_group.setDisplayValue('Warehouse');
+    }
+    assigned = true;
+}
+
+// ===========================
+// RULE 6: Customer Service / Staff Complaints → Store Support
+// In-store service issues and staff behavior complaints
+// ===========================
+if (!assigned &&
+    (complaintCategory == 'Customer Service' ||
+     complaintCategory == 'Rude Staff')) {
+    current.assignment_group.setDisplayValue('Store Support');
+    assigned = true;
+}
+
+// ===========================
+// RULE 7: Physical Store Channel → Store Support
+// Any complaint originating from a physical store visit
+// ===========================
+if (!assigned && channel == 'physical_store') {
+    current.assignment_group.setDisplayValue('Store Support');
+    assigned = true;
+}
+
+// ===========================
+// RULE 8: High Priority + Specific Region → Regional Support
+// Priority 1-2 cases from specific regions need regional coordination
+// ===========================
+if (!assigned && priority <= 2 && storeRegion != '') {
+    current.assignment_group.setDisplayValue('Regional Support');
+    assigned = true;
+}
+
+// ===========================
+// RULE 9: Food & Beverage Product Issues → Quality Team
+// Food safety concerns always go to quality regardless of complaint category
+// ===========================
+if (!assigned && productDepartment == 'food_beverage') {
+    current.assignment_group.setDisplayValue('Quality Team');
+    assigned = true;
+}
+
+// ===========================
+// RULE 10: Default → Customer Care
+// Catch-all for cases that don't match specialized routing
+// ===========================
+if (!assigned) {
+    current.assignment_group.setDisplayValue('Customer Care');
+}
+]]></script>
+    <table>x_2091449_manage_0_consumer_case</table>
+  </sysrule_assignment>
+<sys_update_version action="INSERT_OR_UPDATE">
+        <action>DELETE</action>
+        <application display_value="managementsys">d54ac66b93b543d09b437af08bba109e</application>
+        <file_path/>
+        <instance_id>85dcfe199329cb10c4e8ddd548373cde</instance_id>
+        <instance_name>dev407039</instance_name>
+        <name>sysrule_assignment_4374389c126f4d3f96588451013367c5</name>
+        <payload>&lt;?xml version="1.0" encoding="UTF-8"?&gt;&lt;record_update table="sysrule_assignment"&gt;
+  &lt;sysrule_assignment action="INSERT_OR_UPDATE"&gt;
+    &lt;sys_id&gt;4374389c126f4d3f96588451013367c5&lt;/sys_id&gt;
+    &lt;sys_scope display_value="x_2091449_manage_0"&gt;d54ac66b93b543d09b437af08bba109e&lt;/sys_scope&gt;
+    &lt;sys_update_name&gt;sysrule_assignment_4374389c126f4d3f96588451013367c5&lt;/sys_update_name&gt;
+    &lt;active&gt;true&lt;/active&gt;
+    &lt;condition&gt;assignment_group=^EQ&lt;/condition&gt;
+    &lt;description&gt;Intelligent routing engine for Consumer Cases. Evaluates complaint category, product category, store location, region, priority, and escalation level to route cases to the correct queue: Quality Team (critical defects, food safety), Regional Support (escalations, high-priority regional), Refund Team (billing/overcharge), Logistics (delivery issues), Store Support (in-store/staff complaints), Warehouse (moderate product returns), or Customer Care (default).&lt;/description&gt;
+    &lt;match_conditions&gt;ALL&lt;/match_conditions&gt;
+    &lt;name&gt;Consumer Case Intelligent Routing&lt;/name&gt;
+    &lt;order&gt;100&lt;/order&gt;
+    &lt;script&gt;&lt;![CDATA[/**
+ * Intelligent Consumer Case Routing Script
+ *
+ * Evaluates the following criteria to determine the correct assignment group:
+ * 1. Complaint Category (billing, delivery, product quality, customer service)
+ * 2. Product Category (electronics, clothing, food, home &amp; garden)
+ * 3. Store Location (retail_store reference)
+ * 4. Region (from store's region field: north, south, east, west, central)
+ * 5. Priority (1=Critical, 2=High, 3=Moderate, 4=Low)
+ * 6. Severity/Escalation Level (none, tier_1, tier_2, tier_3, management)
+ *
+ * Routing Decision Matrix:
+ * - Quality Team: Critical priority product issues, safety concerns, high-severity defects
+ * - Regional Support: Escalated cases (tier_2+), high-priority regional issues
+ * - Refund Team: Billing &amp; Pricing complaints, overcharge disputes
+ * - Logistics: Delivery Issues, late delivery, shipping problems
+ * - Store Support: In-store complaints, customer service, staff behavior issues
+ * - Warehouse: Moderate/low priority product quality, returns requiring inspection
+ * - Customer Care: Default catch-all for unmatched cases
+ */
+
+// Gather routing criteria
+var complaintCategory = current.complaint_category.getDisplayValue() || '';
+var productCategory = current.product_category.getDisplayValue() || '';
+var productDepartment = '';
+var storeRegion = '';
+var storeType = '';
+var priority = parseInt(current.priority) || 4;
+var escalationLevel = current.escalation_level + '';
+var channel = current.channel + '';
+
+// Dot-walk through references to get classification data
+if (!current.retail_store.nil()) {
+    storeRegion = current.retail_store.region + '';
+    storeType = current.retail_store.store_type + '';
+}
+
+if (!current.product_category.nil()) {
+    productDepartment = current.product_category.department + '';
+}
+
+// Track whether assignment was made
+var assigned = false;
+
+// ===========================
+// RULE 1: Critical Priority + Product Issues → Quality Team
+// Immediate quality/safety response for critical defects
+// ===========================
+if (!assigned &amp;&amp; priority == 1 &amp;&amp;
+    (complaintCategory == 'Product Quality' ||
+     complaintCategory == 'Defective Product')) {
+    current.assignment_group.setDisplayValue('Quality Team');
+    assigned = true;
+}
+
+// ===========================
+// RULE 2: High Escalation (Tier 2+) → Regional Support
+// Escalated cases need regional management oversight
+// ===========================
+if (!assigned &amp;&amp;
+    (escalationLevel == 'tier_2' ||
+     escalationLevel == 'tier_3' ||
+     escalationLevel == 'management')) {
+    current.assignment_group.setDisplayValue('Regional Support');
+    assigned = true;
+}
+
+// ===========================
+// RULE 3: Billing &amp; Pricing Complaints → Refund Team
+// All financial disputes, overcharges, and billing errors
+// ===========================
+if (!assigned &amp;&amp;
+    (complaintCategory == 'Billing &amp; Pricing' ||
+     complaintCategory == 'Overcharge')) {
+    current.assignment_group.setDisplayValue('Refund Team');
+    assigned = true;
+}
+
+// ===========================
+// RULE 4: Delivery Complaints → Logistics
+// All shipping and delivery-related issues
+// ===========================
+if (!assigned &amp;&amp;
+    (complaintCategory == 'Delivery Issues' ||
+     complaintCategory == 'Late Delivery')) {
+    current.assignment_group.setDisplayValue('Logistics');
+    assigned = true;
+}
+
+// ===========================
+// RULE 5: Product Quality Routing (by Priority/Severity)
+// High priority → Quality Team (investigation)
+// Lower priority → Warehouse (inspection/returns)
+// ===========================
+if (!assigned &amp;&amp;
+    (complaintCategory == 'Product Quality' ||
+     complaintCategory == 'Defective Product')) {
+    if (priority &lt;= 2) {
+        current.assignment_group.setDisplayValue('Quality Team');
+    } else {
+        current.assignment_group.setDisplayValue('Warehouse');
+    }
+    assigned = true;
+}
+
+// ===========================
+// RULE 6: Customer Service / Staff Complaints → Store Support
+// In-store service issues and staff behavior complaints
+// ===========================
+if (!assigned &amp;&amp;
+    (complaintCategory == 'Customer Service' ||
+     complaintCategory == 'Rude Staff')) {
+    current.assignment_group.setDisplayValue('Store Support');
+    assigned = true;
+}
+
+// ===========================
+// RULE 7: Physical Store Channel → Store Support
+// Any complaint originating from a physical store visit
+// ===========================
+if (!assigned &amp;&amp; channel == 'physical_store') {
+    current.assignment_group.setDisplayValue('Store Support');
+    assigned = true;
+}
+
+// ===========================
+// RULE 8: High Priority + Specific Region → Regional Support
+// Priority 1-2 cases from specific regions need regional coordination
+// ===========================
+if (!assigned &amp;&amp; priority &lt;= 2 &amp;&amp; storeRegion != '') {
+    current.assignment_group.setDisplayValue('Regional Support');
+    assigned = true;
+}
+
+// ===========================
+// RULE 9: Food &amp; Beverage Product Issues → Quality Team
+// Food safety concerns always go to quality regardless of complaint category
+// ===========================
+if (!assigned &amp;&amp; productDepartment == 'food_beverage') {
+    current.assignment_group.setDisplayValue('Quality Team');
+    assigned = true;
+}
+
+// ===========================
+// RULE 10: Default → Customer Care
+// Catch-all for cases that don't match specialized routing
+// ===========================
+if (!assigned) {
+    current.assignment_group.setDisplayValue('Customer Care');
+}
+]]&gt;&lt;/script&gt;
+    &lt;table&gt;x_2091449_manage_0_consumer_case&lt;/table&gt;
+  &lt;/sysrule_assignment&gt;
+&lt;/record_update&gt;</payload>
+        <payload_hash>-43555956</payload_hash>
+        <record_name>Consumer Case Intelligent Routing</record_name>
+        <reverted_from/>
+        <source>599bc810938687d09b437af08bba1022</source>
+        <source_table>sys_update_set</source_table>
+        <state>previous</state>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-07-08 18:46:58</sys_created_on>
+        <sys_id>a99b0c10938687d09b437af08bba100f</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_recorded_at>19f430e007c0000001</sys_recorded_at>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-07-08 18:46:58</sys_updated_on>
+        <type>Assignment Rule</type>
+        <update_guid>699b0c103c8687d0f0668368d3c3d60e</update_guid>
+        <update_guid_history>699b0c103c8687d0f0668368d3c3d60e:-43555956</update_guid_history>
+    </sys_update_version>
+    <sys_metadata_delete action="INSERT_OR_UPDATE">
+        <sys_audit_delete/>
+        <sys_class_name>sys_metadata_delete</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-07-08 18:50:29</sys_created_on>
+        <sys_db_object display_value="" name="sysrule_assignment">sysrule_assignment</sys_db_object>
+        <sys_id>3f0341ae92454f7c92031e08bef43210</sys_id>
+        <sys_metadata>4374389c126f4d3f96588451013367c5</sys_metadata>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>Consumer Case Intelligent Routing</sys_name>
+        <sys_package display_value="managementsys" source="x_2091449_manage_0">d54ac66b93b543d09b437af08bba109e</sys_package>
+        <sys_parent display_value="Consumer Case">971810cdd6644f4893ec76b990e72f42</sys_parent>
+        <sys_policy/>
+        <sys_scope display_value="managementsys">d54ac66b93b543d09b437af08bba109e</sys_scope>
+        <sys_scope_delete display_value="">3ee6e3427af24e19b4b8a59149ca70f1</sys_scope_delete>
+        <sys_update_name>sysrule_assignment_4374389c126f4d3f96588451013367c5</sys_update_name>
+        <sys_update_version display_value="sysrule_assignment_4374389c126f4d3f96588451013367c5">a99b0c10938687d09b437af08bba100f</sys_update_version>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-07-08 18:50:29</sys_updated_on>
+    </sys_metadata_delete>
+</record_update>
