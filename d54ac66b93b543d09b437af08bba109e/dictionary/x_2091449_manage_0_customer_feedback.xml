@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?><database>
+    <element db_object_id="ef594e3e74674278b981fc314b516d20" label="Customer Feedback" name="x_2091449_manage_0_customer_feedback" type="collection">
+        <element choice="1" label="Channel" max_length="40" name="channel" type="choice">
+            <choice>
+                <element inactive_on_update="false" label="Email" sequence="1" value="email"/>
+                <element inactive_on_update="false" label="Web" sequence="2" value="web"/>
+                <element inactive_on_update="false" label="Mobile App" sequence="3" value="mobile_app"/>
+                <element inactive_on_update="false" label="SMS" sequence="4" value="sms"/>
+                <element inactive_on_update="false" label="Phone" sequence="0" value="phone"/>
+            </choice>
+        </element>
+        <element choice="1" label="Feedback Type" max_length="40" name="feedback_type" type="choice">
+            <choice>
+                <element inactive_on_update="false" label="Follow Up" sequence="1" value="follow_up"/>
+                <element inactive_on_update="false" label="Spontaneous" sequence="2" value="spontaneous"/>
+                <element inactive_on_update="false" label="Survey" sequence="0" value="survey"/>
+                <element inactive_on_update="false" label="Escalation Feedback" sequence="3" value="escalation_feedback"/>
+            </choice>
+        </element>
+        <element label="Consumer Case" mandatory="true" max_length="32" name="consumer_case" reference="x_2091449_manage_0_consumer_case" type="reference"/>
+        <element choice="1" label="Sentiment" max_length="40" name="sentiment" type="choice">
+            <choice>
+                <element inactive_on_update="false" label="Negative" sequence="2" value="negative"/>
+                <element inactive_on_update="false" label="Positive" sequence="0" value="positive"/>
+                <element inactive_on_update="false" label="Neutral" sequence="1" value="neutral"/>
+            </choice>
+        </element>
+        <element label="Would Recommend" max_length="40" name="would_recommend" type="boolean"/>
+        <element label="Rating" max_length="40" name="rating" type="integer"/>
+        <element label="Comments" max_length="4000" name="comments" type="string"/>
+        <element label="Feedback Date" max_length="40" name="feedback_date" type="glide_date_time"/>
+        <index name="index">
+            <element name="consumer_case"/>
+        </index>
+    </element>
+</database>

@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sp_widget">
+    <sp_widget action="INSERT_OR_UPDATE">
+        <category>custom</category>
+        <client_script><![CDATA[api.controller = function() {
+  var c = this;
+  c.data = c.data || {};
+  c.activeTab = 'my';
+
+  c.setTab = function(tab) {
+    c.activeTab = tab;
+  };
+
+  c.getStateClass = function(state) {
+    if (!state) return 'label-default';
+    var s = state.toLowerCase();
+    if (s === 'open' || s === 'pending') return 'label-info';
+    if (s === 'work in progress') return 'label-warning';
+    if (s === 'closed complete') return 'label-success';
+    return 'label-default';
+  };
+};
+]]></client_script>
+        <controller_as>c</controller_as>
+        <css>.sp-table-wrapper { border: 1px solid $border-tertiary; border-radius: $border-radius-large; overflow: hidden; background: $background-primary; margin-top: 16px; }
+.sp-th { font-size: 12px; font-weight: 600; color: $text-muted; text-transform: uppercase; letter-spacing: 0.04em; padding: 12px 16px; border-bottom: 2px solid $border-tertiary; background: $background-secondary; }
+.sp-td { font-size: $font-size-small; padding: 12px 16px; color: $text-color; border-bottom: 1px solid $border-tertiary; vertical-align: middle; }
+.sp-empty-state { padding: 48px 24px; }
+.sp-empty-icon { font-size: 48px; margin-bottom: 16px; display: block; opacity: 0.35; color: $text-muted; }
+.sp-empty-title { font-size: $font-size-large; font-weight: 600; color: $text-color; margin-bottom: 8px; }
+.nav-tabs { margin-bottom: 0; }
+.nav-tabs &gt; li &gt; a { cursor: pointer; }
+</css>
+        <data_table>sp_instance</data_table>
+        <demo_data/>
+        <description/>
+        <docs/>
+        <field_list/>
+        <has_preview>false</has_preview>
+        <id>x_2091449_manage_0_agent_queue_widget</id>
+        <internal>false</internal>
+        <link><![CDATA[function link(scope, element, attrs, controller) {
+}]]></link>
+        <name>Consumer Case Agent Queue</name>
+        <option_schema/>
+        <public>false</public>
+        <roles/>
+        <script><![CDATA[(function() {
+  data.myCases = [];
+  data.highPriority = [];
+  data.errorMsg = '';
+
+  try {
+    var userId = gs.getUserID();
+    var tableName = 'x_2091449_manage_0_consumer_case';
+
+    // My assigned cases
+    var myGr = new GlideRecord(tableName);
+    myGr.addQuery('assigned_to', userId);
+    myGr.addQuery('active', true);
+    myGr.orderByDesc('priority');
+    myGr.orderByDesc('sys_created_on');
+    myGr.setLimit(25);
+    myGr.query();
+    while (myGr.next()) {
+      data.myCases.push({
+        sys_id: myGr.getUniqueValue(),
+        number: myGr.getValue('number') + '',
+        short_description: myGr.getValue('short_description') + '',
+        state: myGr.getDisplayValue('state') + '',
+        priority: myGr.getDisplayValue('priority') + '',
+        opened_at: myGr.getDisplayValue('opened_at') + '',
+        customer_name: myGr.getValue('customer_name') + ''
+      });
+    }
+
+    // High priority unassigned queue
+    var hpGr = new GlideRecord(tableName);
+    hpGr.addQuery('priority', 'IN', '1,2');
+    hpGr.addQuery('active', true);
+    hpGr.addNullQuery('assigned_to');
+    hpGr.orderBy('priority');
+    hpGr.orderByDesc('sys_created_on');
+    hpGr.setLimit(15);
+    hpGr.query();
+    while (hpGr.next()) {
+      data.highPriority.push({
+        sys_id: hpGr.getUniqueValue(),
+        number: hpGr.getValue('number') + '',
+        short_description: hpGr.getValue('short_description') + '',
+        state: hpGr.getDisplayValue('state') + '',
+        priority: hpGr.getDisplayValue('priority') + '',
+        opened_at: hpGr.getDisplayValue('opened_at') + '',
+        customer_name: hpGr.getValue('customer_name') + ''
+      });
+    }
+  } catch (e) {
+    gs.error('Agent Queue widget error: ' + e.message);
+    data.errorMsg = 'An error occurred loading the agent queue.';
+  }
+})();
+]]></script>
+        <servicenow>false</servicenow>
+        <sys_class_name>sp_widget</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-07-11 15:40:48</sys_created_on>
+        <sys_id>2add80d6d9b645a6b755d84646a00398</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>Consumer Case Agent Queue</sys_name>
+        <sys_package display_value="managementsys" source="x_2091449_manage_0">d54ac66b93b543d09b437af08bba109e</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="managementsys">d54ac66b93b543d09b437af08bba109e</sys_scope>
+        <sys_update_name>sp_widget_2add80d6d9b645a6b755d84646a00398</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-07-11 15:40:48</sys_updated_on>
+        <template><![CDATA[<div class="panel panel-default">
+  <div class="panel-heading">
+    <h3 class="panel-title"><span class="glyphicon glyphicon-user"></span> Agent Queue</h3>
+  </div>
+  <div class="panel-body">
+    <div class="alert alert-danger" ng-if="c.data.errorMsg" role="alert">
+      <span class="glyphicon glyphicon-exclamation-sign"></span> {{c.data.errorMsg}}
+    </div>
+
+    <!-- Tabs -->
+    <ul class="nav nav-tabs">
+      <li ng-class="{'active': c.activeTab === 'my'}">
+        <a ng-click="c.setTab('my')">My Cases <span class="badge">{{c.data.myCases.length}}</span></a>
+      </li>
+      <li ng-class="{'active': c.activeTab === 'high'}">
+        <a ng-click="c.setTab('high')">High Priority Queue <span class="badge">{{c.data.highPriority.length}}</span></a>
+      </li>
+    </ul>
+
+    <!-- My Cases Tab -->
+    <div ng-if="c.activeTab === 'my'" class="sp-table-wrapper">
+      <table class="table table-striped table-hover" ng-if="c.data.myCases.length > 0">
+        <thead>
+          <tr>
+            <th class="sp-th">Number</th>
+            <th class="sp-th">Customer</th>
+            <th class="sp-th">Subject</th>
+            <th class="sp-th">State</th>
+            <th class="sp-th">Priority</th>
+            <th class="sp-th">Opened</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr ng-repeat="rec in c.data.myCases track by rec.sys_id">
+            <td class="sp-td"><strong>{{rec.number}}</strong></td>
+            <td class="sp-td">{{rec.customer_name}}</td>
+            <td class="sp-td">{{rec.short_description}}</td>
+            <td class="sp-td"><span class="label" ng-class="c.getStateClass(rec.state)">{{rec.state}}</span></td>
+            <td class="sp-td">{{rec.priority}}</td>
+            <td class="sp-td">{{rec.opened_at}}</td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="text-center" ng-if="c.data.myCases.length === 0">
+        <div class="sp-empty-state">
+          <span class="glyphicon glyphicon-ok-circle sp-empty-icon"></span>
+          <h4 class="sp-empty-title">No assigned cases</h4>
+          <p class="text-muted">You have no active cases assigned to you.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- High Priority Tab -->
+    <div ng-if="c.activeTab === 'high'" class="sp-table-wrapper">
+      <table class="table table-striped table-hover" ng-if="c.data.highPriority.length > 0">
+        <thead>
+          <tr>
+            <th class="sp-th">Number</th>
+            <th class="sp-th">Customer</th>
+            <th class="sp-th">Subject</th>
+            <th class="sp-th">State</th>
+            <th class="sp-th">Priority</th>
+            <th class="sp-th">Opened</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr ng-repeat="rec in c.data.highPriority track by rec.sys_id">
+            <td class="sp-td"><strong>{{rec.number}}</strong></td>
+            <td class="sp-td">{{rec.customer_name}}</td>
+            <td class="sp-td">{{rec.short_description}}</td>
+            <td class="sp-td"><span class="label" ng-class="c.getStateClass(rec.state)">{{rec.state}}</span></td>
+            <td class="sp-td">{{rec.priority}}</td>
+            <td class="sp-td">{{rec.opened_at}}</td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="text-center" ng-if="c.data.highPriority.length === 0">
+        <div class="sp-empty-state">
+          <span class="glyphicon glyphicon-ok-circle sp-empty-icon"></span>
+          <h4 class="sp-empty-title">Queue is empty</h4>
+          <p class="text-muted">No unassigned high-priority cases at the moment.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+]]></template>
+    </sp_widget>
+</record_update>

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update sys_domain="global" table="sys_app_module">
+    <sys_app_module action="INSERT_OR_UPDATE">
+        <active>true</active>
+        <application display_value="Store Operations &amp; Complaints">7c2e7d944d2144639e569a30bf4b6154</application>
+        <assessment/>
+        <device_type/>
+        <filter/>
+        <hint>View AI recommendations</hint>
+        <homepage/>
+        <image/>
+        <link_type>LIST</link_type>
+        <map_page/>
+        <mobile_title/>
+        <mobile_view_name/>
+        <name>x_2091449_manage_0_ai_recommendation</name>
+        <order>700</order>
+        <override_menu_roles>false</override_menu_roles>
+        <query/>
+        <report/>
+        <require_confirmation>false</require_confirmation>
+        <roles/>
+        <sys_class_name>sys_app_module</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-07-08 17:39:47</sys_created_on>
+        <sys_domain>global</sys_domain>
+        <sys_domain_path>/</sys_domain_path>
+        <sys_id>aa4c904580074cebaea513f1d3e0a5fa</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>AI Recommendations</sys_name>
+        <sys_overrides/>
+        <sys_package display_value="managementsys" source="x_2091449_manage_0">d54ac66b93b543d09b437af08bba109e</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="managementsys">d54ac66b93b543d09b437af08bba109e</sys_scope>
+        <sys_update_name>sys_app_module_aa4c904580074cebaea513f1d3e0a5fa</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-07-08 17:39:47</sys_updated_on>
+        <timeline_page/>
+        <title>AI Recommendations</title>
+        <uncancelable>false</uncancelable>
+        <view_name/>
+        <window_name/>
+    </sys_app_module>
+</record_update>

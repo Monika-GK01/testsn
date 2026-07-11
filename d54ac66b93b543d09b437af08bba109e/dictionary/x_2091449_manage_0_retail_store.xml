@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?><database>
+    <element db_object_id="e0ceb279a76445649922a90e101634c3" label="Retail Store" name="x_2091449_manage_0_retail_store" type="collection">
+        <element label="Country" max_length="100" name="country" type="string"/>
+        <element label="Phone" max_length="40" name="phone" type="string"/>
+        <element label="Store Code" mandatory="true" max_length="20" name="store_code" type="string"/>
+        <element label="Store Manager" max_length="200" name="store_manager" type="string"/>
+        <element default="true" label="Active" max_length="40" name="active" type="boolean"/>
+        <element choice="1" label="Store Type" max_length="40" name="store_type" type="choice">
+            <choice>
+                <element inactive_on_update="false" label="Standard" sequence="1" value="standard"/>
+                <element inactive_on_update="false" label="Online" sequence="4" value="online"/>
+                <element inactive_on_update="false" label="Outlet" sequence="3" value="outlet"/>
+                <element inactive_on_update="false" label="Express" sequence="2" value="express"/>
+                <element inactive_on_update="false" label="Flagship" sequence="0" value="flagship"/>
+            </choice>
+        </element>
+        <element label="Email" max_length="100" name="email" type="email"/>
+        <element label="Opening Date" max_length="40" name="opening_date" type="glide_date"/>
+        <element choice="1" label="Region" max_length="40" name="region" type="choice">
+            <choice>
+                <element inactive_on_update="false" label="East" sequence="2" value="east"/>
+                <element inactive_on_update="false" label="West" sequence="3" value="west"/>
+                <element inactive_on_update="false" label="North" sequence="0" value="north"/>
+                <element inactive_on_update="false" label="South" sequence="1" value="south"/>
+                <element inactive_on_update="false" label="Central" sequence="4" value="central"/>
+            </choice>
+        </element>
+        <element label="State" max_length="100" name="state" type="string"/>
+        <element label="Address" max_length="500" name="address" type="string"/>
+        <element display="true" label="Store Name" mandatory="true" max_length="200" name="name" type="string"/>
+        <element label="City" max_length="100" name="city" type="string"/>
+        <element label="Postal Code" max_length="20" name="postal_code" type="string"/>
+    </element>
+</database>

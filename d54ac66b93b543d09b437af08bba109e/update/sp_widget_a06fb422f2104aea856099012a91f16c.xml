@@ -1,0 +1,274 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sp_widget">
+    <sp_widget action="INSERT_OR_UPDATE">
+        <category>custom</category>
+        <client_script><![CDATA[api.controller = function() {
+  var c = this;
+  c.data = c.data || {};
+
+  c.getStateClass = function(state) {
+    if (!state) return 'label-default';
+    var s = state.toLowerCase();
+    if (s === 'open' || s === 'pending') return 'label-info';
+    if (s === 'work in progress') return 'label-warning';
+    if (s === 'closed complete') return 'label-success';
+    return 'label-default';
+  };
+
+  c.getBarWidth = function(count) {
+    var max = 0;
+    if (c.data.casesByState) {
+      for (var i = 0; i < c.data.casesByState.length; i++) {
+        if (c.data.casesByState[i].count > max) max = c.data.casesByState[i].count;
+      }
+    }
+    return max > 0 ? Math.round((count / max) * 100) : 0;
+  };
+
+  c.getPrioBarWidth = function(count) {
+    var max = 0;
+    if (c.data.casesByPriority) {
+      for (var i = 0; i < c.data.casesByPriority.length; i++) {
+        if (c.data.casesByPriority[i].count > max) max = c.data.casesByPriority[i].count;
+      }
+    }
+    return max > 0 ? Math.round((count / max) * 100) : 0;
+  };
+};
+]]></client_script>
+        <controller_as>c</controller_as>
+        <css>.sp-card-grid { display: flex; flex-wrap: wrap; }
+.sp-card-grid &gt; [class*="col-"] { display: flex; margin-bottom: 24px; }
+.sp-stat-tile { background: $background-primary; border: 1px solid $border-tertiary; border-radius: $border-radius-large; padding: 24px; display: flex; align-items: center; gap: 16px; width: 100%; box-shadow: 0 1px 3px rgba($text-color, 0.06); }
+.sp-stat-icon { width: 48px; height: 48px; border-radius: $border-radius-large; display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0; }
+.sp-stat-icon-info { background: $state-info-bg; color: $brand-info; }
+.sp-stat-icon-success { background: $state-success-bg; color: $brand-success; }
+.sp-stat-icon-warning { background: $state-warning-bg; color: $brand-warning; }
+.sp-stat-icon-danger { background: $state-danger-bg; color: $brand-danger; }
+.sp-stat-value { font-size: 26px; font-weight: 700; color: $text-color; line-height: 1; }
+.sp-stat-label { font-size: 12px; color: $text-muted; margin-top: 4px; }
+.sp-bar-row { margin-bottom: 12px; }
+.sp-bar-label { font-size: $font-size-small; color: $text-color; margin-bottom: 4px; display: block; }
+.sp-card-body-flush { padding: 0; overflow: hidden; }
+.sp-th { font-size: 12px; font-weight: 600; color: $text-muted; text-transform: uppercase; letter-spacing: 0.04em; padding: 12px 16px; border-bottom: 2px solid $border-tertiary; background: $background-secondary; }
+.sp-td { font-size: $font-size-small; padding: 12px 16px; color: $text-color; border-bottom: 1px solid $border-tertiary; vertical-align: middle; }
+</css>
+        <data_table>sp_instance</data_table>
+        <demo_data/>
+        <description/>
+        <docs/>
+        <field_list/>
+        <has_preview>false</has_preview>
+        <id>x_2091449_manage_0_manager_dashboard_wid</id>
+        <internal>false</internal>
+        <link><![CDATA[function link(scope, element, attrs, controller) {
+}]]></link>
+        <name>Consumer Case Manager Dashboard</name>
+        <option_schema/>
+        <public>false</public>
+        <roles/>
+        <script><![CDATA[(function() {
+  data.kpis = [];
+  data.recentCases = [];
+  data.casesByPriority = [];
+  data.casesByState = [];
+  data.errorMsg = '';
+
+  try {
+    var tableName = 'x_2091449_manage_0_consumer_case';
+
+    // KPI: Total
+    var totalGa = new GlideAggregate(tableName);
+    totalGa.addAggregate('COUNT');
+    totalGa.setLimit(1);
+    totalGa.query();
+    var total = 0;
+    if (totalGa.next()) total = parseInt(totalGa.getAggregate('COUNT')) || 0;
+    data.kpis.push({ label: 'Total Cases', value: total, icon: 'glyphicon-folder-open', type: 'info' });
+
+    // KPI: Open
+    var openGa = new GlideAggregate(tableName);
+    openGa.addAggregate('COUNT');
+    openGa.addQuery('state', 'IN', '-5,1,2');
+    openGa.setLimit(1);
+    openGa.query();
+    var openCount = 0;
+    if (openGa.next()) openCount = parseInt(openGa.getAggregate('COUNT')) || 0;
+    data.kpis.push({ label: 'Open Cases', value: openCount, icon: 'glyphicon-inbox', type: 'warning' });
+
+    // KPI: Closed
+    var closedGa = new GlideAggregate(tableName);
+    closedGa.addAggregate('COUNT');
+    closedGa.addQuery('state', 'IN', '3,4,7');
+    closedGa.setLimit(1);
+    closedGa.query();
+    var closedCount = 0;
+    if (closedGa.next()) closedCount = parseInt(closedGa.getAggregate('COUNT')) || 0;
+    data.kpis.push({ label: 'Closed Cases', value: closedCount, icon: 'glyphicon-ok-circle', type: 'success' });
+
+    // KPI: Critical
+    var critGa = new GlideAggregate(tableName);
+    critGa.addAggregate('COUNT');
+    critGa.addQuery('priority', '1');
+    critGa.addQuery('active', true);
+    critGa.setLimit(1);
+    critGa.query();
+    var critCount = 0;
+    if (critGa.next()) critCount = parseInt(critGa.getAggregate('COUNT')) || 0;
+    data.kpis.push({ label: 'Critical', value: critCount, icon: 'glyphicon-exclamation-sign', type: 'danger' });
+
+    // Cases by Priority
+    var prioGa = new GlideAggregate(tableName);
+    prioGa.addAggregate('COUNT');
+    prioGa.addQuery('active', true);
+    prioGa.groupBy('priority');
+    prioGa.setLimit(10);
+    prioGa.query();
+    while (prioGa.next()) {
+      data.casesByPriority.push({
+        label: prioGa.getDisplayValue('priority') + '',
+        count: parseInt(prioGa.getAggregate('COUNT')) || 0
+      });
+    }
+
+    // Cases by State
+    var stateGa = new GlideAggregate(tableName);
+    stateGa.addAggregate('COUNT');
+    stateGa.groupBy('state');
+    stateGa.setLimit(10);
+    stateGa.query();
+    while (stateGa.next()) {
+      data.casesByState.push({
+        label: stateGa.getDisplayValue('state') + '',
+        count: parseInt(stateGa.getAggregate('COUNT')) || 0
+      });
+    }
+
+    // Recent Cases
+    var gr = new GlideRecord(tableName);
+    gr.orderByDesc('sys_created_on');
+    gr.setLimit(10);
+    gr.query();
+    while (gr.next()) {
+      data.recentCases.push({
+        sys_id: gr.getUniqueValue(),
+        number: gr.getValue('number') + '',
+        short_description: gr.getValue('short_description') + '',
+        state: gr.getDisplayValue('state') + '',
+        priority: gr.getDisplayValue('priority') + '',
+        opened_at: gr.getDisplayValue('opened_at') + ''
+      });
+    }
+  } catch (e) {
+    gs.error('Manager Dashboard widget error: ' + e.message);
+    data.errorMsg = 'An error occurred loading dashboard data.';
+  }
+})();
+]]></script>
+        <servicenow>false</servicenow>
+        <sys_class_name>sp_widget</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-07-11 15:40:48</sys_created_on>
+        <sys_id>a06fb422f2104aea856099012a91f16c</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>Consumer Case Manager Dashboard</sys_name>
+        <sys_package display_value="managementsys" source="x_2091449_manage_0">d54ac66b93b543d09b437af08bba109e</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="managementsys">d54ac66b93b543d09b437af08bba109e</sys_scope>
+        <sys_update_name>sp_widget_a06fb422f2104aea856099012a91f16c</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-07-11 15:40:48</sys_updated_on>
+        <template><![CDATA[<div>
+  <!-- KPI Cards -->
+  <div class="row sp-card-grid">
+    <div class="col-md-3 col-sm-6 col-xs-12" ng-repeat="kpi in c.data.kpis track by $index">
+      <div class="sp-stat-tile">
+        <div class="sp-stat-icon sp-stat-icon-{{kpi.type}}">
+          <span class="glyphicon {{kpi.icon}}"></span>
+        </div>
+        <div>
+          <div class="sp-stat-value">{{kpi.value}}</div>
+          <div class="sp-stat-label">{{kpi.label}}</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Charts Row -->
+  <div class="row">
+    <div class="col-md-6 col-xs-12">
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <h3 class="panel-title">Cases by Priority</h3>
+        </div>
+        <div class="panel-body">
+          <div ng-repeat="item in c.data.casesByPriority track by $index" class="sp-bar-row">
+            <span class="sp-bar-label">{{item.label}}</span>
+            <div class="progress">
+              <div class="progress-bar progress-bar-info" ng-style="{'width': c.getPrioBarWidth(item.count) + '%'}">
+                {{item.count}}
+              </div>
+            </div>
+          </div>
+          <div ng-if="c.data.casesByPriority.length === 0" class="text-center text-muted">
+            <p>No data available</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6 col-xs-12">
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <h3 class="panel-title">Cases by State</h3>
+        </div>
+        <div class="panel-body">
+          <div ng-repeat="item in c.data.casesByState track by $index" class="sp-bar-row">
+            <span class="sp-bar-label">{{item.label}}</span>
+            <div class="progress">
+              <div class="progress-bar progress-bar-success" ng-style="{'width': c.getBarWidth(item.count) + '%'}">
+                {{item.count}}
+              </div>
+            </div>
+          </div>
+          <div ng-if="c.data.casesByState.length === 0" class="text-center text-muted">
+            <p>No data available</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Recent Cases -->
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <h3 class="panel-title">Recent Cases</h3>
+    </div>
+    <div class="panel-body sp-card-body-flush" ng-if="c.data.recentCases.length > 0">
+      <table class="table table-striped table-hover">
+        <thead>
+          <tr>
+            <th class="sp-th">Number</th>
+            <th class="sp-th">Subject</th>
+            <th class="sp-th">State</th>
+            <th class="sp-th">Priority</th>
+            <th class="sp-th">Opened</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr ng-repeat="rec in c.data.recentCases track by rec.sys_id">
+            <td class="sp-td"><strong>{{rec.number}}</strong></td>
+            <td class="sp-td">{{rec.short_description}}</td>
+            <td class="sp-td"><span class="label" ng-class="c.getStateClass(rec.state)">{{rec.state}}</span></td>
+            <td class="sp-td">{{rec.priority}}</td>
+            <td class="sp-td">{{rec.opened_at}}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="panel-body text-center" ng-if="c.data.recentCases.length === 0">
+      <p class="text-muted">No recent cases.</p>
+    </div>
+  </div>
+</div>
+]]></template>
+    </sp_widget>
+</record_update>

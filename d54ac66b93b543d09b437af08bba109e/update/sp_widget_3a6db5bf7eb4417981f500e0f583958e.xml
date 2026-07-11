@@ -1,0 +1,237 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sp_widget">
+    <sp_widget action="INSERT_OR_UPDATE">
+        <category>custom</category>
+        <client_script><![CDATA[api.controller = function() {
+  var c = this;
+  c.data = c.data || {};
+  c.searchTerm = '';
+  c.loading = false;
+
+  c.search = function() {
+    if (!c.searchTerm) {
+      c.data.errorMsg = 'Please enter a case number or email.';
+      return;
+    }
+    c.loading = true;
+    c.data.errorMsg = '';
+    c.server.get({ action: 'search', searchTerm: c.searchTerm }).then(function(r) {
+      c.data = r.data;
+      c.loading = false;
+    }, function() {
+      c.loading = false;
+      c.data.errorMsg = 'Search failed. Please try again.';
+    });
+  };
+
+  c.getStateClass = function(state) {
+    if (!state) return 'label-default';
+    var s = state.toLowerCase();
+    if (s === 'open' || s === 'pending') return 'label-info';
+    if (s === 'work in progress') return 'label-warning';
+    if (s === 'closed complete') return 'label-success';
+    if (s === 'closed incomplete' || s === 'closed skipped') return 'label-default';
+    return 'label-default';
+  };
+};
+]]></client_script>
+        <controller_as>c</controller_as>
+        <css>.sp-input {
+  height: $input-height-base;
+  border: 1px solid $border-tertiary;
+  border-radius: $border-radius-base;
+  font-size: $font-size-base;
+  color: $text-color;
+  background: $background-primary;
+  &amp;:focus {
+    border-color: $brand-primary;
+    box-shadow: 0 0 0 3px rgba($brand-primary, 0.15);
+    outline: none;
+  }
+}
+.sp-btn-primary {
+  height: $input-height-base;
+  padding: 0 20px;
+  border-radius: $border-radius-base;
+  font-size: $font-size-base;
+  font-weight: 500;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  border: none;
+  background: $brand-primary;
+  color: $btn-primary-color;
+  &amp;:hover:not(:disabled) {
+    background: $brand-primary-dark;
+    color: $btn-primary-color;
+  }
+}
+.sp-table-wrapper {
+  border: 1px solid $border-tertiary;
+  border-radius: $border-radius-large;
+  overflow: hidden;
+  background: $background-primary;
+  margin-top: 24px;
+}
+.sp-th {
+  font-size: 12px;
+  font-weight: 600;
+  color: $text-muted;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  padding: 12px 16px;
+  border-bottom: 2px solid $border-tertiary;
+  background: $background-secondary;
+}
+.sp-td {
+  font-size: $font-size-small;
+  padding: 12px 16px;
+  color: $text-color;
+  border-bottom: 1px solid $border-tertiary;
+  vertical-align: middle;
+}
+.sp-empty-state {
+  padding: 64px 24px;
+}
+.sp-empty-icon {
+  font-size: 48px;
+  margin-bottom: 16px;
+  display: block;
+  opacity: 0.35;
+  color: $text-muted;
+}
+.sp-empty-title {
+  font-size: $font-size-large;
+  font-weight: 600;
+  color: $text-color;
+  margin-bottom: 8px;
+}
+@keyframes sp-spin { to { transform: rotate(360deg); } }
+.sp-spin { animation: sp-spin 0.8s linear infinite; }
+</css>
+        <data_table>sp_instance</data_table>
+        <demo_data/>
+        <description/>
+        <docs/>
+        <field_list/>
+        <has_preview>false</has_preview>
+        <id>x_2091449_manage_0_track_complaint_widge</id>
+        <internal>false</internal>
+        <link><![CDATA[function link(scope, element, attrs, controller) {
+}]]></link>
+        <name>Consumer Case Track Complaint</name>
+        <option_schema/>
+        <public>false</public>
+        <roles/>
+        <script><![CDATA[(function() {
+  data.records = [];
+  data.searched = false;
+  data.errorMsg = '';
+
+  try {
+    if (input && input.action === 'search') {
+      data.searched = true;
+      var searchTerm = input.searchTerm || '';
+      if (!searchTerm) {
+        data.errorMsg = 'Please enter a case number or email to search.';
+        return;
+      }
+
+      var gr = new GlideRecord('x_2091449_manage_0_consumer_case');
+      var qc = gr.addQuery('number', 'CONTAINS', searchTerm);
+      qc.addOrCondition('customer_email', searchTerm);
+      gr.orderByDesc('sys_created_on');
+      gr.setLimit(20);
+      gr.query();
+      while (gr.next()) {
+        data.records.push({
+          sys_id: gr.getUniqueValue(),
+          number: gr.getValue('number') + '',
+          short_description: gr.getValue('short_description') + '',
+          state: gr.getDisplayValue('state') + '',
+          priority: gr.getDisplayValue('priority') + '',
+          assignment_group: gr.getDisplayValue('assignment_group') + '',
+          opened_at: gr.getDisplayValue('opened_at') + ''
+        });
+      }
+      return;
+    }
+  } catch (e) {
+    gs.error('Track Complaint widget error: ' + e.message);
+    data.errorMsg = 'An error occurred during search.';
+  }
+})();
+]]></script>
+        <servicenow>false</servicenow>
+        <sys_class_name>sp_widget</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-07-11 15:40:48</sys_created_on>
+        <sys_id>3a6db5bf7eb4417981f500e0f583958e</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>Consumer Case Track Complaint</sys_name>
+        <sys_package display_value="managementsys" source="x_2091449_manage_0">d54ac66b93b543d09b437af08bba109e</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="managementsys">d54ac66b93b543d09b437af08bba109e</sys_scope>
+        <sys_update_name>sp_widget_3a6db5bf7eb4417981f500e0f583958e</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-07-11 15:40:48</sys_updated_on>
+        <template><![CDATA[<div class="panel panel-default">
+  <div class="panel-heading">
+    <h3 class="panel-title"><span class="glyphicon glyphicon-search"></span> Track Your Complaint</h3>
+  </div>
+  <div class="panel-body">
+    <div class="alert alert-danger" ng-if="c.data.errorMsg" role="alert">
+      <span class="glyphicon glyphicon-exclamation-sign"></span> {{c.data.errorMsg}}
+    </div>
+
+    <div class="row">
+      <div class="col-md-8 col-xs-12">
+        <div class="input-group">
+          <input type="text" class="form-control sp-input" ng-model="c.searchTerm" placeholder="Enter case number or customer email" ng-keypress="$event.keyCode === 13 && c.search()">
+          <span class="input-group-btn">
+            <button type="button" class="btn btn-primary sp-btn-primary" ng-click="c.search()" ng-disabled="c.loading">
+              <span class="glyphicon glyphicon-search" ng-if="!c.loading"></span>
+              <span class="glyphicon glyphicon-refresh" ng-if="c.loading" ng-class="{'sp-spin': c.loading}"></span>
+              Search
+            </button>
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <div ng-if="c.data.searched && c.data.records.length > 0" class="sp-table-wrapper">
+      <table class="table table-striped table-hover">
+        <thead>
+          <tr>
+            <th class="sp-th">Number</th>
+            <th class="sp-th">Subject</th>
+            <th class="sp-th">State</th>
+            <th class="sp-th">Priority</th>
+            <th class="sp-th">Assignment Group</th>
+            <th class="sp-th">Opened</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr ng-repeat="rec in c.data.records track by rec.sys_id">
+            <td class="sp-td"><strong>{{rec.number}}</strong></td>
+            <td class="sp-td">{{rec.short_description}}</td>
+            <td class="sp-td"><span class="label" ng-class="c.getStateClass(rec.state)">{{rec.state}}</span></td>
+            <td class="sp-td">{{rec.priority}}</td>
+            <td class="sp-td">{{rec.assignment_group}}</td>
+            <td class="sp-td">{{rec.opened_at}}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="text-center" ng-if="c.data.searched && c.data.records.length === 0 && !c.loading">
+      <div class="sp-empty-state">
+        <span class="glyphicon glyphicon-inbox sp-empty-icon"></span>
+        <h4 class="sp-empty-title">No results found</h4>
+        <p class="text-muted">No cases match your search. Please check the case number or email and try again.</p>
+      </div>
+    </div>
+  </div>
+</div>
+]]></template>
+    </sp_widget>
+</record_update>

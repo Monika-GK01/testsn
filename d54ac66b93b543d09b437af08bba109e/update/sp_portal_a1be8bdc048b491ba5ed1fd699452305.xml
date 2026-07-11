@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sp_portal">
+    <sp_portal action="INSERT_OR_UPDATE">
+        <alternate_portal/>
+        <communication_channels/>
+        <css_variables/>
+        <dark_theme/>
+        <default>false</default>
+        <embeddable_macroponents/>
+        <enable_ais>false</enable_ais>
+        <enable_certificate_based_authentication>false</enable_certificate_based_authentication>
+        <enable_embeddables>false</enable_embeddables>
+        <enable_favorites>false</enable_favorites>
+        <hide_portal_name>false</hide_portal_name>
+        <homepage display_value="x_2091449_manage_0_home">afc5ef9f6e7d4c13a04f167f0b348fb9</homepage>
+        <icon/>
+        <inactive>false</inactive>
+        <kb_knowledge_base/>
+        <kb_knowledge_page/>
+        <login_page display_value="login">6995a144cb11120000f8d856634c9c25</login_page>
+        <logo/>
+        <logo_alt_text>Portal</logo_alt_text>
+        <notfound_page display_value="404">3c2c9063cb11020000f8d856634c9c1f</notfound_page>
+        <quick_start_config/>
+        <rtl_enabled>false</rtl_enabled>
+        <sc_catalog/>
+        <sc_catalog_page/>
+        <sc_category_page/>
+        <search_application/>
+        <search_results_configuration/>
+        <sp_chat_queue/>
+        <sp_rectangle_menu display_value="Consumer Case Portal Menu">08cab13e1523412da9aac715a1122df5</sp_rectangle_menu>
+        <sys_class_name>sp_portal</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-07-11 15:40:47</sys_created_on>
+        <sys_id>a1be8bdc048b491ba5ed1fd699452305</sys_id>
+        <sys_mod_count>2</sys_mod_count>
+        <sys_name>Consumer Case Portal</sys_name>
+        <sys_package display_value="managementsys" source="x_2091449_manage_0">d54ac66b93b543d09b437af08bba109e</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="managementsys">d54ac66b93b543d09b437af08bba109e</sys_scope>
+        <sys_update_name>sp_portal_a1be8bdc048b491ba5ed1fd699452305</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-07-11 20:23:18</sys_updated_on>
+        <theme display_value="Consumer Case Portal Theme">65ab0902289b4ab6aa356b0705a0f5c3</theme>
+        <title>Consumer Case Portal</title>
+        <ts_index_group/>
+        <url_suffix>x_2091449_manage_0_case_portal</url_suffix>
+    </sp_portal>
+    <sys_translated_text action="delete_multiple" query="documentkey=a1be8bdc048b491ba5ed1fd699452305"/>
+</record_update>

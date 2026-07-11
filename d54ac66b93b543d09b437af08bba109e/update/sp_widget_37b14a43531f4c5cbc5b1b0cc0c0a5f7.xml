@@ -1,0 +1,314 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sp_widget">
+    <sp_widget action="INSERT_OR_UPDATE">
+        <category>custom</category>
+        <client_script><![CDATA[api.controller = function() {
+  var c = this;
+  c.data = c.data || {};
+  c.submitting = false;
+  c.form = {
+    customer_name: '',
+    customer_email: '',
+    customer_phone: '',
+    short_description: '',
+    description: '',
+    channel: '',
+    priority: '3',
+    urgency: '3'
+  };
+
+  c.submit = function() {
+    c.data.errorMsg = '';
+    c.data.successMsg = '';
+
+    if (!c.form.customer_name || !c.form.customer_email || !c.form.short_description) {
+      c.data.errorMsg = 'Please fill in all required fields.';
+      return;
+    }
+
+    c.submitting = true;
+    c.server.get({
+      action: 'submit',
+      customer_name: c.form.customer_name,
+      customer_email: c.form.customer_email,
+      customer_phone: c.form.customer_phone,
+      short_description: c.form.short_description,
+      description: c.form.description,
+      channel: c.form.channel,
+      priority: c.form.priority,
+      urgency: c.form.urgency
+    }).then(function(r) {
+      c.data = r.data;
+      if (r.data.success) {
+        c.form = {};
+      }
+      c.submitting = false;
+    }, function() {
+      c.submitting = false;
+      c.data.errorMsg = 'An error occurred. Please try again.';
+    });
+  };
+
+  c.goToMyComplaints = function() {
+    window.location.href = '?id=x_2091449_manage_0_my_complaints';
+  };
+};
+]]></client_script>
+        <controller_as>c</controller_as>
+        <css>.sp-input {
+  height: $input-height-base;
+  border: 1px solid $border-tertiary;
+  border-radius: $border-radius-base;
+  padding: 0 12px;
+  font-size: $font-size-base;
+  color: $text-color;
+  background: $background-primary;
+  transition: border-color 0.15s, box-shadow 0.15s;
+  width: 100%;
+  &amp;:focus {
+    border-color: $brand-primary;
+    box-shadow: 0 0 0 3px rgba($brand-primary, 0.15);
+    outline: none;
+  }
+}
+.sp-textarea {
+  border-radius: $border-radius-base;
+  border: 1px solid $border-tertiary;
+  padding: 12px;
+  font-size: $font-size-base;
+  color: $text-color;
+  background: $background-primary;
+  resize: vertical;
+  min-height: 100px;
+  transition: border-color 0.15s;
+  &amp;:focus {
+    border-color: $brand-primary;
+    box-shadow: 0 0 0 3px rgba($brand-primary, 0.15);
+    outline: none;
+  }
+}
+.sp-btn-primary {
+  height: 44px;
+  padding: 0 20px;
+  border-radius: $border-radius-base;
+  font-size: $font-size-base;
+  font-weight: 500;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  transition: background 0.15s, box-shadow 0.15s;
+  cursor: pointer;
+  border: none;
+  background: $brand-primary;
+  color: $btn-primary-color;
+  &amp;:hover:not(:disabled) {
+    background: $brand-primary-dark;
+    box-shadow: 0 2px 8px rgba($brand-primary, 0.3);
+    color: $btn-primary-color;
+  }
+  &amp;:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+  }
+}
+.sp-btn-group {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  margin-top: 24px;
+  flex-wrap: wrap;
+}
+.has-error .sp-input,
+.has-error .sp-textarea {
+  border-color: $brand-danger;
+}
+@keyframes sp-spin { to { transform: rotate(360deg); } }
+.sp-spin { animation: sp-spin 0.8s linear infinite; }
+</css>
+        <data_table>sp_instance</data_table>
+        <demo_data/>
+        <description/>
+        <docs/>
+        <field_list/>
+        <has_preview>false</has_preview>
+        <id>x_2091449_manage_0_create_complaint_widg</id>
+        <internal>false</internal>
+        <link><![CDATA[function link(scope, element, attrs, controller) {
+}]]></link>
+        <name>Consumer Case Create Complaint</name>
+        <option_schema/>
+        <public>false</public>
+        <roles/>
+        <script><![CDATA[(function() {
+  data.success = false;
+  data.errorMsg = '';
+  data.successMsg = '';
+  data.caseNumber = '';
+  data.channels = [];
+  data.priorities = [];
+
+  try {
+    // Channel choices
+    data.channels = [
+      { value: 'call_center', label: 'Call Center' },
+      { value: 'email', label: 'Email' },
+      { value: 'website', label: 'Website' },
+      { value: 'live_chat', label: 'Live Chat' },
+      { value: 'chatbot', label: 'Chatbot' },
+      { value: 'mobile_app', label: 'Mobile App' },
+      { value: 'whatsapp', label: 'WhatsApp' },
+      { value: 'instagram', label: 'Instagram' },
+      { value: 'physical_store', label: 'Physical Store' },
+      { value: 'marketplace', label: 'Marketplace' }
+    ];
+
+    // Priority choices
+    data.priorities = [
+      { value: '1', label: '1 - Critical' },
+      { value: '2', label: '2 - High' },
+      { value: '3', label: '3 - Moderate' },
+      { value: '4', label: '4 - Low' }
+    ];
+
+    if (input && input.action === 'submit') {
+      if (!input.short_description || !input.customer_name || !input.customer_email) {
+        data.errorMsg = 'Please fill in all required fields.';
+        return;
+      }
+
+      var gr = new GlideRecord('x_2091449_manage_0_consumer_case');
+      gr.initialize();
+      gr.setValue('short_description', input.short_description);
+      gr.setValue('description', input.description || '');
+      gr.setValue('customer_name', input.customer_name);
+      gr.setValue('customer_email', input.customer_email);
+      gr.setValue('customer_phone', input.customer_phone || '');
+      gr.setValue('channel', input.channel || '');
+      gr.setValue('priority', input.priority || '4');
+      gr.setValue('urgency', input.urgency || '3');
+      gr.setValue('state', '1');
+
+      var sysId = gr.insert();
+      if (sysId) {
+        gr.get(sysId);
+        data.success = true;
+        data.caseNumber = gr.getValue('number') + '';
+        data.successMsg = 'Your complaint has been submitted successfully. Case Number: ' + data.caseNumber;
+      } else {
+        data.errorMsg = 'Failed to create complaint. Please try again.';
+      }
+      return;
+    }
+  } catch (e) {
+    gs.error('Create Complaint widget error: ' + e.message);
+    data.errorMsg = 'An error occurred. Please try again.';
+  }
+})();
+]]></script>
+        <servicenow>false</servicenow>
+        <sys_class_name>sp_widget</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-07-11 15:40:48</sys_created_on>
+        <sys_id>37b14a43531f4c5cbc5b1b0cc0c0a5f7</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>Consumer Case Create Complaint</sys_name>
+        <sys_package display_value="managementsys" source="x_2091449_manage_0">d54ac66b93b543d09b437af08bba109e</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="managementsys">d54ac66b93b543d09b437af08bba109e</sys_scope>
+        <sys_update_name>sp_widget_37b14a43531f4c5cbc5b1b0cc0c0a5f7</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-07-11 15:40:48</sys_updated_on>
+        <template><![CDATA[<div class="panel panel-default">
+  <div class="panel-heading">
+    <h3 class="panel-title"><span class="glyphicon glyphicon-pencil"></span> Submit a Complaint</h3>
+  </div>
+  <div class="panel-body">
+    <div class="alert alert-success alert-dismissible" ng-if="c.data.success" role="alert">
+      <span class="glyphicon glyphicon-ok-circle"></span>
+      <strong>Success!</strong> {{c.data.successMsg}}
+      <br><br>
+      <button type="button" class="btn btn-primary sp-btn-primary" ng-click="c.goToMyComplaints()">
+        <span class="glyphicon glyphicon-list"></span> View My Complaints
+      </button>
+    </div>
+
+    <div class="alert alert-danger" ng-if="c.data.errorMsg" role="alert">
+      <span class="glyphicon glyphicon-exclamation-sign"></span>
+      <strong>Error!</strong> {{c.data.errorMsg}}
+    </div>
+
+    <form ng-if="!c.data.success" novalidate>
+      <div class="row">
+        <div class="col-md-6 col-xs-12">
+          <div class="form-group" ng-class="{'has-error': !c.form.customer_name && c.submitted}">
+            <label class="control-label" for="customer_name">Customer Name <span class="text-danger">*</span></label>
+            <input type="text" class="form-control sp-input" id="customer_name" ng-model="c.form.customer_name" placeholder="Full name">
+          </div>
+        </div>
+        <div class="col-md-6 col-xs-12">
+          <div class="form-group" ng-class="{'has-error': !c.form.customer_email && c.submitted}">
+            <label class="control-label" for="customer_email">Customer Email <span class="text-danger">*</span></label>
+            <input type="email" class="form-control sp-input" id="customer_email" ng-model="c.form.customer_email" placeholder="email@example.com">
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-6 col-xs-12">
+          <div class="form-group">
+            <label class="control-label" for="customer_phone">Phone Number</label>
+            <input type="text" class="form-control sp-input" id="customer_phone" ng-model="c.form.customer_phone" placeholder="Phone number">
+          </div>
+        </div>
+        <div class="col-md-6 col-xs-12">
+          <div class="form-group">
+            <label class="control-label" for="channel">Channel</label>
+            <select class="form-control sp-input" id="channel" ng-model="c.form.channel" ng-options="ch.value as ch.label for ch in c.data.channels">
+              <option value="">-- Select Channel --</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group" ng-class="{'has-error': !c.form.short_description && c.submitted}">
+        <label class="control-label" for="short_description">Subject <span class="text-danger">*</span></label>
+        <input type="text" class="form-control sp-input" id="short_description" ng-model="c.form.short_description" placeholder="Brief description of your complaint">
+      </div>
+
+      <div class="form-group">
+        <label class="control-label" for="description">Description</label>
+        <textarea class="form-control sp-textarea" id="description" ng-model="c.form.description" placeholder="Detailed description of the issue" rows="4"></textarea>
+      </div>
+
+      <div class="row">
+        <div class="col-md-6 col-xs-12">
+          <div class="form-group">
+            <label class="control-label" for="priority">Priority</label>
+            <select class="form-control sp-input" id="priority" ng-model="c.form.priority" ng-options="p.value as p.label for p in c.data.priorities">
+            </select>
+          </div>
+        </div>
+        <div class="col-md-6 col-xs-12">
+          <div class="form-group">
+            <label class="control-label" for="urgency">Urgency</label>
+            <select class="form-control sp-input" id="urgency" ng-model="c.form.urgency">
+              <option value="1">1 - High</option>
+              <option value="2">2 - Medium</option>
+              <option value="3">3 - Low</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <div class="sp-btn-group">
+        <button type="button" class="btn btn-primary sp-btn-primary" ng-click="c.submitted=true; c.submit()" ng-disabled="c.submitting">
+          <span class="glyphicon glyphicon-ok" ng-if="!c.submitting"></span>
+          <span class="glyphicon glyphicon-refresh" ng-if="c.submitting" ng-class="{'sp-spin': c.submitting}"></span>
+          {{c.submitting ? 'Submitting...' : 'Submit Complaint'}}
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+]]></template>
+    </sp_widget>
+</record_update>

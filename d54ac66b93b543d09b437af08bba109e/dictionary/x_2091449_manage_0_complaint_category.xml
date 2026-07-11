@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?><database>
+    <element db_object_id="8cff445b406848039c60912e2fa718b3" label="Complaint Category" name="x_2091449_manage_0_complaint_category" type="collection">
+        <element label="SLA Hours" max_length="40" name="sla_hours" type="integer"/>
+        <element display="true" label="Category Name" mandatory="true" max_length="200" name="name" type="string"/>
+        <element default="true" label="Active" max_length="40" name="active" type="boolean"/>
+        <element label="Priority Weight" max_length="40" name="priority_weight" type="integer"/>
+        <element label="Description" max_length="1000" name="description" type="string"/>
+        <element label="Parent Category" max_length="32" name="parent_category" reference="x_2091449_manage_0_complaint_category" type="reference"/>
+        <index name="index">
+            <element name="parent_category"/>
+        </index>
+    </element>
+</database>

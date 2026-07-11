@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update>
+    <sys_choice action="INSERT_OR_UPDATE" field="escalation_level" table="x_2091449_manage_0_consumer_case" version="3">
+        <sys_choice_set action="INSERT_OR_UPDATE">
+            <element>escalation_level</element>
+            <name>x_2091449_manage_0_consumer_case</name>
+            <sys_class_name>sys_choice_set</sys_class_name>
+            <sys_created_by>admin</sys_created_by>
+            <sys_created_on>2026-07-08 17:39:48</sys_created_on>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_name>escalation_level</sys_name>
+            <sys_package display_value="managementsys" source="x_2091449_manage_0">d54ac66b93b543d09b437af08bba109e</sys_package>
+            <sys_policy/>
+            <sys_scope display_value="managementsys">d54ac66b93b543d09b437af08bba109e</sys_scope>
+            <sys_update_name>sys_choice_x_2091449_manage_0_consumer_case_escalation_level</sys_update_name>
+            <sys_updated_by>admin</sys_updated_by>
+            <sys_updated_on>2026-07-08 17:39:48</sys_updated_on>
+        </sys_choice_set>
+        <sys_choice action="INSERT_OR_UPDATE">
+            <dependent_value/>
+            <element>escalation_level</element>
+            <hint/>
+            <inactive>false</inactive>
+            <label>None</label>
+            <language>en</language>
+            <name>x_2091449_manage_0_consumer_case</name>
+            <sequence>0</sequence>
+            <synonyms/>
+            <sys_created_by>admin</sys_created_by>
+            <sys_created_on>2026-07-08 18:30:20</sys_created_on>
+            <sys_domain>global</sys_domain>
+            <sys_domain_path>/</sys_domain_path>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_updated_by>admin</sys_updated_by>
+            <sys_updated_on>2026-07-08 18:30:20</sys_updated_on>
+            <value>none</value>
+        </sys_choice>
+        <sys_choice action="INSERT_OR_UPDATE">
+            <dependent_value/>
+            <element>escalation_level</element>
+            <hint/>
+            <inactive>false</inactive>
+            <label>Tier 1</label>
+            <language>en</language>
+            <name>x_2091449_manage_0_consumer_case</name>
+            <sequence>1</sequence>
+            <synonyms/>
+            <sys_created_by>admin</sys_created_by>
+            <sys_created_on>2026-07-08 18:30:20</sys_created_on>
+            <sys_domain>global</sys_domain>
+            <sys_domain_path>/</sys_domain_path>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_updated_by>admin</sys_updated_by>
+            <sys_updated_on>2026-07-08 18:30:20</sys_updated_on>
+            <value>tier_1</value>
+        </sys_choice>
+        <sys_choice action="INSERT_OR_UPDATE">
+            <dependent_value/>
+            <element>escalation_level</element>
+            <hint/>
+            <inactive>false</inactive>
+            <label>Tier 2</label>
+            <language>en</language>
+            <name>x_2091449_manage_0_consumer_case</name>
+            <sequence>2</sequence>
+            <synonyms/>
+            <sys_created_by>admin</sys_created_by>
+            <sys_created_on>2026-07-08 18:30:20</sys_created_on>
+            <sys_domain>global</sys_domain>
+            <sys_domain_path>/</sys_domain_path>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_updated_by>admin</sys_updated_by>
+            <sys_updated_on>2026-07-08 18:30:20</sys_updated_on>
+            <value>tier_2</value>
+        </sys_choice>
+        <sys_choice action="INSERT_OR_UPDATE">
+            <dependent_value/>
+            <element>escalation_level</element>
+            <hint/>
+            <inactive>false</inactive>
+            <label>Tier 3</label>
+            <language>en</language>
+            <name>x_2091449_manage_0_consumer_case</name>
+            <sequence>3</sequence>
+            <synonyms/>
+            <sys_created_by>admin</sys_created_by>
+            <sys_created_on>2026-07-08 18:30:20</sys_created_on>
+            <sys_domain>global</sys_domain>
+            <sys_domain_path>/</sys_domain_path>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_updated_by>admin</sys_updated_by>
+            <sys_updated_on>2026-07-08 18:30:20</sys_updated_on>
+            <value>tier_3</value>
+        </sys_choice>
+        <sys_choice action="INSERT_OR_UPDATE">
+            <dependent_value/>
+            <element>escalation_level</element>
+            <hint/>
+            <inactive>false</inactive>
+            <label>Management</label>
+            <language>en</language>
+            <name>x_2091449_manage_0_consumer_case</name>
+            <sequence>4</sequence>
+            <synonyms/>
+            <sys_created_by>admin</sys_created_by>
+            <sys_created_on>2026-07-08 18:30:20</sys_created_on>
+            <sys_domain>global</sys_domain>
+            <sys_domain_path>/</sys_domain_path>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_updated_by>admin</sys_updated_by>
+            <sys_updated_on>2026-07-08 18:30:20</sys_updated_on>
+            <value>management</value>
+        </sys_choice>
+    </sys_choice>
+</record_update>

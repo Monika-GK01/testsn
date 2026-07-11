@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?><database>
+    <element audit="true" db_object_id="39d7e419188b42f7b64b7aa94d0cbbfa" label="Facility" name="x_2091449_manage_0_facility" type="collection">
+        <element label="City" max_length="100" name="city" type="string"/>
+        <element label="Address" max_length="255" name="address" type="string"/>
+        <element label="ZIP Code" max_length="20" name="zip_code" type="string"/>
+        <element choice="1" label="Security Level" max_length="40" name="security_level" type="choice">
+            <choice>
+                <element inactive_on_update="false" label="Restricted" sequence="3" value="restricted"/>
+                <element inactive_on_update="false" label="High" sequence="2" value="high"/>
+                <element inactive_on_update="false" label="Low" sequence="0" value="low"/>
+                <element inactive_on_update="false" label="Medium" sequence="1" value="medium"/>
+            </choice>
+        </element>
+        <element default="true" label="Active" max_length="40" name="active" type="boolean"/>
+        <element display="true" label="Facility Name" mandatory="true" max_length="100" name="name" type="string"/>
+        <element label="Contact Email" max_length="255" name="contact_email" type="email"/>
+        <element label="State" max_length="50" name="state" type="string"/>
+        <element label="Contact Name" max_length="100" name="contact_name" type="string"/>
+        <element label="Contact Phone" max_length="20" name="contact_phone" type="string"/>
+    </element>
+</database>

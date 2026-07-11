@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sp_widget">
+    <sp_widget action="INSERT_OR_UPDATE">
+        <category>custom</category>
+        <client_script><![CDATA[api.controller = function() {
+  var c = this;
+  c.data = c.data || {};
+
+  c.createComplaint = function() {
+    window.location.href = '?id=x_2091449_manage_0_create_complaint';
+  };
+
+  c.trackComplaint = function() {
+    window.location.href = '?id=x_2091449_manage_0_track';
+  };
+};
+]]></client_script>
+        <controller_as>c</controller_as>
+        <css>.sp-hero {
+  background: linear-gradient(135deg, lighten($brand-primary, 30%) 0%, lighten($brand-primary, 15%) 50%, $brand-primary 100%);
+  border-radius: $border-radius-large;
+  margin-bottom: 24px;
+  overflow: hidden;
+  position: relative;
+  &amp;::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: rgba($btn-primary-color, 0.15);
+    pointer-events: none;
+  }
+}
+.sp-hero-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 48px;
+  position: relative;
+  z-index: 1;
+  flex-wrap: wrap;
+  gap: 24px;
+}
+.sp-hero-title {
+  font-size: 32px;
+  font-weight: 700;
+  color: $btn-primary-color;
+  margin: 0 0 8px;
+  line-height: 1.2;
+}
+.sp-hero-subtitle {
+  font-size: $font-size-base;
+  color: $btn-primary-color;
+  opacity: 0.85;
+  margin: 0;
+  max-width: 560px;
+}
+.sp-hero-actions {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.sp-hero-btn {
+  background: rgba($btn-primary-color, 0.9);
+  color: $brand-primary;
+  border: none;
+  border-radius: $border-radius-base;
+  height: 44px;
+  padding: 0 20px;
+  font-size: $font-size-base;
+  font-weight: 500;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  transition: background 0.15s;
+  &amp;:hover {
+    background: $btn-primary-color;
+    color: $brand-primary-dark;
+  }
+}
+.sp-hero-btn-secondary {
+  background: rgba($btn-primary-color, 0.2);
+  color: $btn-primary-color;
+  border: 1px solid rgba($btn-primary-color, 0.4);
+  border-radius: $border-radius-base;
+  height: 44px;
+  padding: 0 20px;
+  font-size: $font-size-base;
+  font-weight: 500;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  transition: background 0.15s;
+  &amp;:hover {
+    background: rgba($btn-primary-color, 0.35);
+    color: $btn-primary-color;
+  }
+}
+</css>
+        <data_table>sp_instance</data_table>
+        <demo_data/>
+        <description/>
+        <docs/>
+        <field_list/>
+        <has_preview>false</has_preview>
+        <id>x_2091449_manage_0_home_hero_widget</id>
+        <internal>false</internal>
+        <link><![CDATA[function link(scope, element, attrs, controller) {
+}]]></link>
+        <name>Consumer Case Home Hero</name>
+        <option_schema/>
+        <public>false</public>
+        <roles/>
+        <script><![CDATA[(function() {
+  data.title = 'Consumer Case Portal';
+  data.subtitle = 'Submit and track your complaints with ease. We are committed to resolving your issues quickly.';
+  data.userName = '';
+  data.isLoggedIn = false;
+
+  try {
+    var userId = gs.getUserID();
+    if (userId && userId !== 'guest') {
+      data.isLoggedIn = true;
+      var userGr = new GlideRecord('sys_user');
+      userGr.setLimit(1);
+      if (userGr.get(userId)) {
+        data.userName = userGr.getDisplayValue('first_name') + '';
+      }
+    }
+  } catch (e) {
+    gs.error('Home Hero widget error: ' + e.message);
+  }
+})();
+]]></script>
+        <servicenow>false</servicenow>
+        <sys_class_name>sp_widget</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-07-11 15:40:48</sys_created_on>
+        <sys_id>d2b1bcc5d75d4fecae2bef0045c9a190</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>Consumer Case Home Hero</sys_name>
+        <sys_package display_value="managementsys" source="x_2091449_manage_0">d54ac66b93b543d09b437af08bba109e</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="managementsys">d54ac66b93b543d09b437af08bba109e</sys_scope>
+        <sys_update_name>sp_widget_d2b1bcc5d75d4fecae2bef0045c9a190</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-07-11 15:40:48</sys_updated_on>
+        <template><![CDATA[<div class="sp-hero">
+  <div class="sp-hero-inner">
+    <div class="sp-hero-text">
+      <h1 class="sp-hero-title" ng-if="c.data.isLoggedIn">Welcome back, {{c.data.userName}}!</h1>
+      <h1 class="sp-hero-title" ng-if="!c.data.isLoggedIn">{{c.data.title}}</h1>
+      <p class="sp-hero-subtitle">{{c.data.subtitle}}</p>
+    </div>
+    <div class="sp-hero-actions">
+      <button type="button" class="btn sp-hero-btn" ng-click="c.createComplaint()">
+        <span class="glyphicon glyphicon-plus"></span> Create Complaint
+      </button>
+      <button type="button" class="btn sp-hero-btn-secondary" ng-click="c.trackComplaint()">
+        <span class="glyphicon glyphicon-search"></span> Track Complaint
+      </button>
+    </div>
+  </div>
+</div>
+]]></template>
+    </sp_widget>
+</record_update>

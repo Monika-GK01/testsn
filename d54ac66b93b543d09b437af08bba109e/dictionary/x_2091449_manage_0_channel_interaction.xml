@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?><database>
+    <element db_object_id="51a32c7277834d3d93b273e981dabd9c" extends="task" label="Channel Interaction" name="x_2091449_manage_0_channel_interaction" type="collection">
+        <element label="Agent Name" max_length="200" name="agent_name" type="string"/>
+        <element choice="1" label="Channel" max_length="40" name="channel" type="choice">
+            <choice>
+                <element inactive_on_update="false" label="Live Chat" sequence="5" value="live_chat"/>
+                <element inactive_on_update="false" label="Website" sequence="0" value="website"/>
+                <element inactive_on_update="false" label="Instagram" sequence="8" value="instagram"/>
+                <element inactive_on_update="false" label="X (Twitter)" sequence="9" value="twitter"/>
+                <element inactive_on_update="false" label="Call Center" sequence="3" value="call_center"/>
+                <element inactive_on_update="false" label="Marketplace" sequence="10" value="marketplace"/>
+                <element inactive_on_update="false" label="Mobile App" sequence="1" value="mobile_app"/>
+                <element inactive_on_update="false" label="Email" sequence="4" value="email"/>
+                <element inactive_on_update="false" label="WhatsApp" sequence="7" value="whatsapp"/>
+                <element inactive_on_update="false" label="Physical Store" sequence="2" value="physical_store"/>
+                <element inactive_on_update="false" label="Chatbot" sequence="6" value="chatbot"/>
+            </choice>
+        </element>
+        <element label="Customer Name" mandatory="true" max_length="200" name="customer_name" type="string"/>
+        <element label="Source Reference" max_length="500" name="source_reference" type="string"/>
+        <element label="Customer Phone" max_length="40" name="customer_phone" type="string"/>
+        <element label="Customer Email" max_length="100" name="customer_email" type="email"/>
+        <element label="Consumer Case" mandatory="true" max_length="32" name="consumer_case" reference="x_2091449_manage_0_consumer_case" type="reference"/>
+        <element choice="1" label="Sentiment" max_length="40" name="sentiment" type="choice">
+            <choice>
+                <element inactive_on_update="false" label="Neutral" sequence="1" value="neutral"/>
+                <element inactive_on_update="false" label="Negative" sequence="2" value="negative"/>
+                <element inactive_on_update="false" label="Positive" sequence="0" value="positive"/>
+                <element inactive_on_update="false" label="Urgent" sequence="3" value="urgent"/>
+            </choice>
+        </element>
+        <element choice="1" label="Interaction Type" max_length="40" name="interaction_type" type="choice">
+            <choice>
+                <element inactive_on_update="false" label="Complaint" sequence="0" value="complaint"/>
+                <element inactive_on_update="false" label="Inquiry" sequence="1" value="inquiry"/>
+                <element inactive_on_update="false" label="Follow Up" sequence="2" value="follow_up"/>
+                <element inactive_on_update="false" label="Escalation" sequence="3" value="escalation"/>
+                <element inactive_on_update="false" label="Feedback" sequence="4" value="feedback"/>
+            </choice>
+        </element>
+        <element label="Processed" max_length="40" name="processed" type="boolean"/>
+        <element label="Message Body" max_length="4000" name="message_body" type="string"/>
+    </element>
+</database>

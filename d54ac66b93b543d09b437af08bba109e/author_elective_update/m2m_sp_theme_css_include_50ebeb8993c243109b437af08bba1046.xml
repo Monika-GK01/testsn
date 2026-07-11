@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="m2m_sp_theme_css_include">
+    <m2m_sp_theme_css_include action="DELETE">
+        <order/>
+        <sp_css_include display_value="">27dbab8993c243109b437af08bba1051</sp_css_include>
+        <sp_theme display_value="Consumer Case Portal Theme">65ab0902289b4ab6aa356b0705a0f5c3</sp_theme>
+        <sys_class_name>m2m_sp_theme_css_include</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-07-11 19:02:22</sys_created_on>
+        <sys_id>50ebeb8993c243109b437af08bba1046</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>.Consumer Case Portal Theme</sys_name>
+        <sys_package display_value="managementsys" source="x_2091449_manage_0">d54ac66b93b543d09b437af08bba109e</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="managementsys">d54ac66b93b543d09b437af08bba109e</sys_scope>
+        <sys_update_name>m2m_sp_theme_css_include_50ebeb8993c243109b437af08bba1046</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-07-11 19:02:22</sys_updated_on>
+    </m2m_sp_theme_css_include>
+    <sys_update_version action="INSERT_OR_UPDATE">
+        <action>DELETE</action>
+        <application display_value="managementsys">d54ac66b93b543d09b437af08bba109e</application>
+        <file_path/>
+        <instance_id>85dcfe199329cb10c4e8ddd548373cde</instance_id>
+        <instance_name>dev407039</instance_name>
+        <name>m2m_sp_theme_css_include_50ebeb8993c243109b437af08bba1046</name>
+        <payload><![CDATA[<?xml version="1.0" encoding="UTF-8"?><record_update table="m2m_sp_theme_css_include"><m2m_sp_theme_css_include action="INSERT_OR_UPDATE"><order/><sp_css_include display_value="">27dbab8993c243109b437af08bba1051</sp_css_include><sp_theme display_value="Consumer Case Portal Theme">65ab0902289b4ab6aa356b0705a0f5c3</sp_theme><sys_class_name>m2m_sp_theme_css_include</sys_class_name><sys_created_by>admin</sys_created_by><sys_created_on>2026-07-11 19:02:22</sys_created_on><sys_id>50ebeb8993c243109b437af08bba1046</sys_id><sys_mod_count>0</sys_mod_count><sys_name>.Consumer Case Portal Theme</sys_name><sys_package display_value="managementsys" source="x_2091449_manage_0">d54ac66b93b543d09b437af08bba109e</sys_package><sys_policy/><sys_scope display_value="managementsys">d54ac66b93b543d09b437af08bba109e</sys_scope><sys_update_name>m2m_sp_theme_css_include_50ebeb8993c243109b437af08bba1046</sys_update_name><sys_updated_by>admin</sys_updated_by><sys_updated_on>2026-07-11 19:02:22</sys_updated_on></m2m_sp_theme_css_include></record_update>]]></payload>
+        <payload_hash>-1927722534</payload_hash>
+        <record_name>.Consumer Case Portal Theme</record_name>
+        <reverted_from/>
+        <source>41f9bb4893c287d09b437af08bba109a</source>
+        <source_table>sys_update_set</source_table>
+        <state>previous</state>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-07-11 19:02:22</sys_created_on>
+        <sys_id>dcebeb8993c243109b437af08bba104a</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_recorded_at>19f528f2c4f0000001</sys_recorded_at>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-07-11 19:02:22</sys_updated_on>
+        <type>Stylesheets</type>
+        <update_guid>9cebeb8942c243101887582ebaf29d49</update_guid>
+        <update_guid_history>9cebeb8942c243101887582ebaf29d49:-1927722534</update_guid_history>
+    </sys_update_version>
+    <sys_metadata_delete action="INSERT_OR_UPDATE">
+        <sys_audit_delete display_value=".Consumer Case Portal Theme">b9bca70d93c243109b437af08bba10e6</sys_audit_delete>
+        <sys_class_name>sys_metadata_delete</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-07-11 19:06:02</sys_created_on>
+        <sys_db_object display_value="" name="m2m_sp_theme_css_include">m2m_sp_theme_css_include</sys_db_object>
+        <sys_id>0e2ab87b2e2c4b0282440406fb1d2964</sys_id>
+        <sys_metadata>50ebeb8993c243109b437af08bba1046</sys_metadata>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>.Consumer Case Portal Theme</sys_name>
+        <sys_package display_value="managementsys" source="x_2091449_manage_0">d54ac66b93b543d09b437af08bba109e</sys_package>
+        <sys_parent/>
+        <sys_policy/>
+        <sys_scope display_value="managementsys">d54ac66b93b543d09b437af08bba109e</sys_scope>
+        <sys_scope_delete display_value="">3ee6e3427af24e19b4b8a59149ca70f1</sys_scope_delete>
+        <sys_update_name>m2m_sp_theme_css_include_50ebeb8993c243109b437af08bba1046</sys_update_name>
+        <sys_update_version display_value="m2m_sp_theme_css_include_50ebeb8993c243109b437af08bba1046">dcebeb8993c243109b437af08bba104a</sys_update_version>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-07-11 19:06:02</sys_updated_on>
+    </sys_metadata_delete>
+</record_update>

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_number">
+    <sys_number action="INSERT_OR_UPDATE">
+        <category display_value="" name="x_2091449_manage_0_consumer_case">x_2091449_manage_0_consumer_case</category>
+        <maximum_digits>7</maximum_digits>
+        <number>1000</number>
+        <prefix>CSC</prefix>
+        <sys_class_name>sys_number</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-07-08 17:40:10</sys_created_on>
+        <sys_id>f4c9fb56d76c450d8067b2b811077208</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>CSC</sys_name>
+        <sys_package display_value="managementsys" source="x_2091449_manage_0">d54ac66b93b543d09b437af08bba109e</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="managementsys">d54ac66b93b543d09b437af08bba109e</sys_scope>
+        <sys_update_name>sys_number_f4c9fb56d76c450d8067b2b811077208</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-07-08 17:40:10</sys_updated_on>
+    </sys_number>
+</record_update>

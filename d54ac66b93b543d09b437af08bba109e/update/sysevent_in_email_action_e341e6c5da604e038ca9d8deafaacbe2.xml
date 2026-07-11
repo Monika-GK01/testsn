@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update sys_domain="global" table="sysevent_in_email_action">
+    <sysevent_in_email_action action="INSERT_OR_UPDATE">
+        <action>record_action</action>
+        <active>true</active>
+        <assignment_operator/>
+        <condition_script/>
+        <description>Processes incoming complaint emails and creates/updates Consumer Cases via the OmnichannelIntakeProcessor</description>
+        <event_name>email.read</event_name>
+        <filter_condition table="sys_email">subjectCONTAINScomplaint^ORsubjectCONTAINSissue^ORsubjectCONTAINSproblem^ORsubjectCONTAINSreturn^ORsubjectCONTAINSrefund^EQ<item endquery="false" field="subject" goto="false" newquery="false" operator="CONTAINS" or="false" value="complaint"/>
+            <item endquery="false" field="subject" goto="false" newquery="false" operator="CONTAINS" or="true" value="issue"/>
+            <item endquery="false" field="subject" goto="false" newquery="false" operator="CONTAINS" or="true" value="problem"/>
+            <item endquery="false" field="subject" goto="false" newquery="false" operator="CONTAINS" or="true" value="return"/>
+            <item endquery="false" field="subject" goto="false" newquery="false" operator="CONTAINS" or="true" value="refund"/>
+            <item endquery="true" field="" goto="false" newquery="false" operator="=" or="false" value=""/>
+        </filter_condition>
+        <from/>
+        <name>Omnichannel Complaint Email Intake</name>
+        <order>100</order>
+        <reply_email/>
+        <required_roles/>
+        <script><![CDATA[(function processEmail(email, current, event, logger, classifier) {
+        // Use the OmnichannelIntakeProcessor for consistent handling
+        var processor = new x_2091449_manage_0.OmnichannelIntakeProcessor();
+        var result = processor.processEmailIntake(email);
+        
+        if (result.success && result.is_new_case) {
+            // Set current to the newly created case
+            current.get(result.case_sys_id);
+        } else if (result.success && !result.is_new_case) {
+            // Existing case was updated - set current to it
+            current.get(result.case_sys_id);
+        }
+        
+        logger.info('Omnichannel Email Intake: Processed email. Case: ' + result.case_number + ', New: ' + result.is_new_case);
+    })(email, current, event, logger, classifier)]]></script>
+        <stop_processing>true</stop_processing>
+        <sys_class_name>sysevent_in_email_action</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-07-08 18:26:01</sys_created_on>
+        <sys_domain>global</sys_domain>
+        <sys_domain_path>/</sys_domain_path>
+        <sys_id>e341e6c5da604e038ca9d8deafaacbe2</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>Omnichannel Complaint Email Intake</sys_name>
+        <sys_overrides/>
+        <sys_package display_value="managementsys" source="x_2091449_manage_0">d54ac66b93b543d09b437af08bba109e</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="managementsys">d54ac66b93b543d09b437af08bba109e</sys_scope>
+        <sys_update_name>sysevent_in_email_action_e341e6c5da604e038ca9d8deafaacbe2</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-07-08 18:26:01</sys_updated_on>
+        <table>x_2091449_manage_0_consumer_case</table>
+        <template/>
+        <type>new</type>
+    </sysevent_in_email_action>
+</record_update>

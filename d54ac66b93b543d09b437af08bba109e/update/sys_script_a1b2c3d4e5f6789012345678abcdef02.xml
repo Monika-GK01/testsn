@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update sys_domain="global" table="sys_script">
+    <sys_script action="INSERT_OR_UPDATE">
+        <abort_action>false</abort_action>
+        <access>package_private</access>
+        <action_delete>false</action_delete>
+        <action_insert>false</action_insert>
+        <action_query>false</action_query>
+        <action_update>true</action_update>
+        <active>true</active>
+        <add_message>false</add_message>
+        <advanced>true</advanced>
+        <change_fields>false</change_fields>
+        <client_callable>false</client_callable>
+        <collection>x_2091449_manage_0_consumer_case</collection>
+        <condition/>
+        <description>Creates Complaint History entries when assignment_group, state, escalation_level, or resolution_code changes on a Consumer Case.</description>
+        <execute_function>false</execute_function>
+        <filter_condition table="x_2091449_manage_0_consumer_case">assignment_groupVALCHANGES^ORstateVALCHANGES^ORresolution_codeVALCHANGES^EQ<item endquery="false" field="assignment_group" goto="false" newquery="false" operator="VALCHANGES" or="false" value=""/>
+            <item endquery="false" field="state" goto="false" newquery="false" operator="VALCHANGES" or="true" value=""/>
+            <item display_value="-- None --" endquery="false" field="resolution_code" goto="false" newquery="false" operator="VALCHANGES" or="true" value=""/>
+            <item endquery="true" field="" goto="false" newquery="false" operator="=" or="false" value=""/>
+        </filter_condition>
+        <is_rest>false</is_rest>
+        <message/>
+        <name>Log Case Field Changes</name>
+        <order>200</order>
+        <priority>100</priority>
+        <rest_method/>
+        <rest_method_text/>
+        <rest_service/>
+        <rest_service_text/>
+        <rest_variables/>
+        <role_conditions/>
+        <script><![CDATA[(function executeRule(current, previous) {
+
+    try {
+
+        var history = new GlideRecord('x_2091449_manage_0_complaint_history');
+
+        history.initialize();
+
+        history.consumer_case = current.sys_id;
+
+        history.action_type = 'updated';
+
+        var changes = [];
+
+        if (current.assignment_group.changes()) {
+            changes.push(
+                'Assignment Group changed from "' +
+                previous.assignment_group.getDisplayValue() +
+                '" to "' +
+                current.assignment_group.getDisplayValue() +
+                '"'
+            );
+        }
+
+
+        if (current.state.changes()) {
+            changes.push(
+                'State changed from "' +
+                previous.state.getDisplayValue() +
+                '" to "' +
+                current.state.getDisplayValue() +
+                '"'
+            );
+        }
+
+
+        if (current.escalation_level.changes()) {
+            changes.push(
+                'Escalation changed from "' +
+                previous.escalation_level.getDisplayValue() +
+                '" to "' +
+                current.escalation_level.getDisplayValue() +
+                '"'
+            );
+        }
+
+
+        if (current.resolution_code.changes()) {
+            changes.push(
+                'Resolution Code changed from "' +
+                previous.resolution_code.getDisplayValue() +
+                '" to "' +
+                current.resolution_code.getDisplayValue() +
+                '"'
+            );
+        }
+
+
+        if (changes.length > 0) {
+
+            history.action_details = changes.join('\n');
+
+            history.new_state = current.state.getDisplayValue();
+
+            history.performed_by = gs.getUserID();
+
+            history.action_date = new GlideDateTime();
+
+
+            var result = history.insert();
+
+
+            if (!result) {
+
+                gs.error(
+                    'Log Case Field Changes: Insert failed for case ' +
+                    current.number
+                );
+
+            } else {
+
+                gs.info(
+                    'Complaint history created: ' +
+                    result
+                );
+
+            }
+
+        }
+
+
+    } catch(ex) {
+
+        gs.error(
+            'Log Case Field Changes BR Error: ' +
+            ex.message
+        );
+
+    }
+
+
+})(current, previous);]]></script>
+        <sys_class_name>sys_script</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-07-11 10:08:52</sys_created_on>
+        <sys_domain>global</sys_domain>
+        <sys_domain_path>/</sys_domain_path>
+        <sys_id>a1b2c3d4e5f6789012345678abcdef02</sys_id>
+        <sys_mod_count>1</sys_mod_count>
+        <sys_name>Log Case Field Changes</sys_name>
+        <sys_overrides/>
+        <sys_package display_value="managementsys" source="x_2091449_manage_0">d54ac66b93b543d09b437af08bba109e</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="managementsys">d54ac66b93b543d09b437af08bba109e</sys_scope>
+        <sys_update_name>sys_script_a1b2c3d4e5f6789012345678abcdef02</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-07-11 11:24:02</sys_updated_on>
+        <template/>
+        <when>after</when>
+    </sys_script>
+    <sys_translated_text action="delete_multiple" query="documentkey=a1b2c3d4e5f6789012345678abcdef02"/>
+</record_update>

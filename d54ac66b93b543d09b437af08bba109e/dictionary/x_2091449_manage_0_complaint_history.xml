@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?><database>
+    <element db_object_id="c134923ee4b34f2c8660da2147cd4a37" label="Complaint History" name="x_2091449_manage_0_complaint_history" type="collection">
+        <element label="Performed By" max_length="200" name="performed_by" type="string"/>
+        <element label="Previous State" max_length="40" name="previous_state" type="string"/>
+        <element choice="1" label="Action Type" max_length="40" name="action_type" type="choice">
+            <choice>
+                <element inactive_on_update="false" label="Escalated" sequence="2" value="escalated"/>
+                <element inactive_on_update="false" label="Assigned" sequence="3" value="assigned"/>
+                <element inactive_on_update="false" label="Resolved" sequence="4" value="resolved"/>
+                <element inactive_on_update="false" label="Note Added" sequence="6" value="note_added"/>
+                <element inactive_on_update="false" label="Created" sequence="0" value="created"/>
+                <element inactive_on_update="false" label="Updated" sequence="1" value="updated"/>
+                <element inactive_on_update="false" label="Reopened" sequence="5" value="reopened"/>
+                <element inactive_on_update="false" label="Customer Contacted" sequence="7" value="customer_contacted"/>
+            </choice>
+        </element>
+        <element label="New State" max_length="40" name="new_state" type="string"/>
+        <element label="Consumer Case" mandatory="true" max_length="32" name="consumer_case" reference="x_2091449_manage_0_consumer_case" type="reference"/>
+        <element label="Action Details" max_length="4000" name="action_details" type="string"/>
+        <element label="Action Date" max_length="40" name="action_date" type="glide_date_time"/>
+        <index name="index">
+            <element name="consumer_case"/>
+        </index>
+    </element>
+</database>

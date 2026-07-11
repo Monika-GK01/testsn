@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sp_header_footer">
+    <sp_header_footer action="INSERT_OR_UPDATE">
+        <category>custom</category>
+        <client_script><![CDATA[api.controller = function($scope, $uibModal) {
+  var c = this;
+
+  $scope.openLogin = function() {
+    $scope.modalInstance = $uibModal.open({
+      templateUrl: 'modalLogin',
+      scope: $scope
+    });
+  };
+};
+]]></client_script>
+        <controller_as>c</controller_as>
+        <css>.navbar {&#13;
+  min-height: 50px;&#13;
+  transition: 250ms opacity ease-in-out;&#13;
+  border: 0;&#13;
+  border-bottom: $sp-navbar-bottom-width solid $sp-navbar-divider-color;&#13;
+  margin-bottom: 0;&#13;
+  border-radius: 0;&#13;
+}&#13;
+&#13;
+&#13;
+.navbar-header {&#13;
+  float: left;&#13;
+}&#13;
+&#13;
+&#13;
+.navbar-brand {&#13;
+  height: 50px;&#13;
+  padding: 0 15px;&#13;
+  display: flex;&#13;
+  align-items: center;&#13;
+  max-height: 50px;&#13;
+}&#13;
+&#13;
+&#13;
+.navbar-brand img,&#13;
+.navbar-brand span {&#13;
+  max-height: $sp-logo-max-height;&#13;
+  max-width: $sp-logo-max-width;&#13;
+  overflow: hidden;&#13;
+}&#13;
+&#13;
+&#13;
+.nav &gt; li &gt; a {&#13;
+  max-height: 50px;&#13;
+  padding-top: 15px;&#13;
+  padding-bottom: 15px;&#13;
+}&#13;
+&#13;
+&#13;
+nav .toggle-dropdown {&#13;
+  height: 50px;&#13;
+}&#13;
+&#13;
+&#13;
+.navbar-right {&#13;
+  float: right !important;&#13;
+  display: flex !important;&#13;
+  align-items: center;&#13;
+}&#13;
+&#13;
+&#13;
+.navbar-toggle {&#13;
+  display: none !important;&#13;
+}&#13;
+&#13;
+&#13;
+.collapse {&#13;
+  display: block !important;&#13;
+}</css>
+        <data_table>sp_instance</data_table>
+        <demo_data/>
+        <description/>
+        <docs/>
+        <field_list/>
+        <has_preview>false</has_preview>
+        <id>x_2091449_manage_0_case_portal_header</id>
+        <internal>false</internal>
+        <link><![CDATA[function link(scope, element, attrs, controller) {
+}]]></link>
+        <name>Consumer Case Portal Header</name>
+        <option_schema/>
+        <public>false</public>
+        <roles/>
+        <script><![CDATA[(function() {
+  var menu = $sp.getValue('sp_rectangle_menu');
+  data.menu = $sp.getWidgetFromInstance(menu);
+  data.hasMenuItems = false;
+  data.hasLogin = false;
+  data.login_page = $sp.getValue('login_page');
+
+  if (data.menu && data.menu.data) {
+    data.menu.data.replace = true;
+    if (data.menu.data.menu && data.menu.data.menu.items) {
+      data.hasMenuItems = data.menu.data.menu.items.length > 0;
+      for (var i in data.menu.data.menu.items) {
+        var item = data.menu.data.menu.items[i];
+        if (item.type == 'page' && item.sp_page == data.login_page)
+          data.hasLogin = true;
+      }
+    }
+  }
+})();
+]]></script>
+        <servicenow>false</servicenow>
+        <static>true</static>
+        <sys_class_name>sp_header_footer</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-07-11 15:40:47</sys_created_on>
+        <sys_id>be65940122f24155944013fe3e263ca7</sys_id>
+        <sys_mod_count>8</sys_mod_count>
+        <sys_name>Consumer Case Portal Header</sys_name>
+        <sys_package display_value="managementsys" source="x_2091449_manage_0">d54ac66b93b543d09b437af08bba109e</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="managementsys">d54ac66b93b543d09b437af08bba109e</sys_scope>
+        <sys_update_name>sp_header_footer_be65940122f24155944013fe3e263ca7</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-07-11 20:20:09</sys_updated_on>
+        <template><![CDATA[<nav class="navbar navbar-inverse" role="navigation" aria-label="${Primary}">
+  <div class="container-fluid">
+
+    <div class="navbar-header">
+      <a class="navbar-brand" ng-if="::!portal.logo" href="?id={{::portal.homepage_dv}}">
+        <span ng-bind="portal.title"></span>
+      </a>
+
+      <a class="navbar-brand navbar-brand-logo" ng-if="::portal.logo" ng-href="?id={{::portal.homepage_dv}}">
+        <img ng-src="{{::portal.logo}}" alt="{{::portal.logo_alt_text || portal.title}} Logo">
+      </a>
+    </div>
+
+    <div class="navbar-right" id="sp-nav-bar" role="navigation">
+
+      <sp-widget widget="::data.menu"></sp-widget>
+
+      <ul ng-if="!user.logged_in && page.id != portal.login_page_dv && !data.hasLogin"
+          class="nav navbar-nav"
+          role="presentation">
+        <li role="presentation">
+          <a href ng-click="openLogin()">${Login}</a>
+        </li>
+      </ul>
+
+
+      <ul ng-if="user.logged_in" class="nav navbar-nav">
+
+        <li class="hidden-xs hidden-sm dropdown">
+
+          <a href
+             class="toggle-dropdown"
+             data-toggle="dropdown"
+             aria-expanded="false"
+             role="button"
+             aria-haspopup="true">
+
+            <span class="visible-lg-inline">
+              {{::user.name}}
+            </span>
+
+          </a>
+
+
+          <ul class="dropdown-menu">
+
+            <li>
+              <a ng-href="?id=user_profile&sys_id={{::user.sys_id}}">
+                ${Profile}
+              </a>
+            </li>
+
+            <li>
+              <a href="{{::portal.logoutUrl}}">
+                ${Logout}
+              </a>
+            </li>
+
+          </ul>
+
+        </li>
+
+
+        <li class="visible-xs-block visible-sm-block">
+          <a ng-href="?id=user_profile&sys_id={{::user.sys_id}}">
+            {{::user.name}}
+          </a>
+        </li>
+
+
+        <li class="visible-xs-block visible-sm-block">
+          <a ng-href="{{::portal.logoutUrl}}">
+            ${Logout}
+          </a>
+        </li>
+
+
+      </ul>
+
+    </div>
+
+  </div>
+</nav>]]></template>
+    </sp_header_footer>
+</record_update>

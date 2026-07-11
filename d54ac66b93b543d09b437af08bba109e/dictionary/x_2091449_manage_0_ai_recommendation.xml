@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?><database>
+    <element db_object_id="29d608ab7e9a4dd680ac3f5ee8066209" label="AI Recommendation" name="x_2091449_manage_0_ai_recommendation" type="collection">
+        <element label="Consumer Case" mandatory="true" max_length="32" name="consumer_case" reference="x_2091449_manage_0_consumer_case" type="reference"/>
+        <element choice="1" default="pending" label="Status" max_length="40" name="status" type="choice">
+            <choice>
+                <element inactive_on_update="false" label="Expired" sequence="3" value="expired"/>
+                <element inactive_on_update="false" label="Rejected" sequence="2" value="rejected"/>
+                <element inactive_on_update="false" label="Accepted" sequence="1" value="accepted"/>
+                <element inactive_on_update="false" label="Pending" sequence="0" value="pending"/>
+            </choice>
+        </element>
+        <element label="Generated Date" max_length="40" name="generated_date" type="glide_date_time"/>
+        <element label="Feedback" max_length="1000" name="feedback" type="string"/>
+        <element choice="1" label="Recommendation Type" max_length="40" name="recommendation_type" type="choice">
+            <choice>
+                <element inactive_on_update="false" label="Priority" sequence="2" value="priority"/>
+                <element inactive_on_update="false" label="Response Template" sequence="4" value="response_template"/>
+                <element inactive_on_update="false" label="Escalation" sequence="1" value="escalation"/>
+                <element inactive_on_update="false" label="Resolution" sequence="0" value="resolution"/>
+                <element inactive_on_update="false" label="Assignment" sequence="3" value="assignment"/>
+            </choice>
+        </element>
+        <element label="Model Version" max_length="50" name="model_version" type="string"/>
+        <element label="Accepted Date" max_length="40" name="accepted_date" type="glide_date_time"/>
+        <element label="Confidence Score" max_length="20" name="confidence_score" type="decimal"/>
+        <element label="Recommendation Text" max_length="4000" name="recommendation_text" type="string"/>
+        <index name="index">
+            <element name="consumer_case"/>
+        </index>
+    </element>
+</database>

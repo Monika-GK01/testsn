@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?><database>
+    <element db_object_id="fad8f81db1a04d00a0b9a981fd35292e" label="Product Category" name="x_2091449_manage_0_product_category" type="collection">
+        <element display="true" label="Category Name" mandatory="true" max_length="200" name="name" type="string"/>
+        <element label="Description" max_length="1000" name="description" type="string"/>
+        <element default="true" label="Active" max_length="40" name="active" type="boolean"/>
+        <element choice="1" label="Department" max_length="40" name="department" type="choice">
+            <choice>
+                <element inactive_on_update="false" label="Food &amp; Beverage" sequence="2" value="food_beverage"/>
+                <element inactive_on_update="false" label="Home &amp; Garden" sequence="3" value="home_garden"/>
+                <element inactive_on_update="false" label="Sports" sequence="4" value="sports"/>
+                <element inactive_on_update="false" label="Beauty" sequence="5" value="beauty"/>
+                <element inactive_on_update="false" label="Electronics" sequence="0" value="electronics"/>
+                <element inactive_on_update="false" label="Automotive" sequence="7" value="automotive"/>
+                <element inactive_on_update="false" label="Clothing" sequence="1" value="clothing"/>
+                <element inactive_on_update="false" label="Toys" sequence="6" value="toys"/>
+            </choice>
+        </element>
+        <element label="Parent Category" max_length="32" name="parent_category" reference="x_2091449_manage_0_product_category" type="reference"/>
+        <index name="index">
+            <element name="parent_category"/>
+        </index>
+    </element>
+</database>

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_ws_query_parameter_map">
+    <sys_ws_query_parameter_map action="INSERT_OR_UPDATE">
+        <sys_class_name>sys_ws_query_parameter_map</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-07-08 18:26:01</sys_created_on>
+        <sys_id>d05ad3b8b9d944f89251c46006b3d611</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>eaa4a2dfd6514068b6fd856318899481</sys_name>
+        <sys_package display_value="managementsys" source="x_2091449_manage_0">d54ac66b93b543d09b437af08bba109e</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="managementsys">d54ac66b93b543d09b437af08bba109e</sys_scope>
+        <sys_update_name>sys_ws_query_parameter_map_d05ad3b8b9d944f89251c46006b3d611</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-07-08 18:26:01</sys_updated_on>
+        <web_service_operation display_value="Get Case Status">3e5a577dafad4fc2b3862551b602cdba</web_service_operation>
+        <web_service_query_parameter display_value="case_number">eaa4a2dfd6514068b6fd856318899481</web_service_query_parameter>
+    </sys_ws_query_parameter_map>
+</record_update>

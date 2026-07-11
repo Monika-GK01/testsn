@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_ws_operation">
+    <sys_ws_operation action="INSERT_OR_UPDATE">
+        <active>true</active>
+        <consumes>application/json</consumes>
+        <consumes_customized>false</consumes_customized>
+        <default_operation_uri/>
+        <enforce_acl>cf9d01d3e73003009d6247e603f6a990</enforce_acl>
+        <http_method>GET</http_method>
+        <name>Get Case Status</name>
+        <operation_script><![CDATA[(function process(request, response) {
+                var caseNumber = request.pathParams.case_number;
+                var gr = new GlideRecord('x_2091449_manage_0_consumer_case');
+                gr.addQuery('number', caseNumber);
+                gr.setLimit(1);
+                gr.query();
+                
+                if (gr.next()) {
+                    var caseSysId = gr.getUniqueValue();
+                    
+                    // Get interactions
+                    var interactions = [];
+                    var intGr = new GlideRecord('x_2091449_manage_0_channel_interaction');
+                    intGr.addQuery('consumer_case', caseSysId);
+                    intGr.orderBy('sys_created_on');
+                    intGr.query();
+                    while (intGr.next()) {
+                        interactions.push({
+                            sys_id: intGr.getUniqueValue(),
+                            channel: intGr.getValue('channel'),
+                            interaction_type: intGr.getValue('interaction_type'),
+                            message_body: intGr.getValue('message_body'),
+                            sentiment: intGr.getValue('sentiment'),
+                            created_on: intGr.getValue('sys_created_on')
+                        });
+                    }
+                    
+                    response.setStatus(200);
+                    response.setBody({
+                        case_number: caseNumber,
+                        case_sys_id: caseSysId,
+                        short_description: gr.getValue('short_description'),
+                        channel: gr.getValue('channel'),
+                        channel_detail: gr.getValue('channel_detail'),
+                        state: gr.getValue('state'),
+                        priority: gr.getValue('priority'),
+                        interaction_count: gr.getValue('interaction_count'),
+                        customer_name: gr.getValue('customer_name'),
+                        customer_email: gr.getValue('customer_email'),
+                        interactions: interactions
+                    });
+                } else {
+                    response.setStatus(404);
+                    response.setBody({ success: false, error: 'Case not found: ' + caseNumber });
+                }
+            })(request, response)]]></operation_script>
+        <operation_uri>/api/x_2091449_manage_0/omnichannel_intake/status/{case_number}</operation_uri>
+        <produces>application/json</produces>
+        <produces_customized>false</produces_customized>
+        <relative_path>/status/{case_number}</relative_path>
+        <request_example/>
+        <requires_acl_authorization>true</requires_acl_authorization>
+        <requires_authentication>true</requires_authentication>
+        <requires_snc_internal_role>true</requires_snc_internal_role>
+        <short_description>Get the current status and interaction history of a Consumer Case</short_description>
+        <sys_class_name>sys_ws_operation</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-07-08 18:26:01</sys_created_on>
+        <sys_id>3e5a577dafad4fc2b3862551b602cdba</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>Get Case Status</sys_name>
+        <sys_package display_value="managementsys" source="x_2091449_manage_0">d54ac66b93b543d09b437af08bba109e</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="managementsys">d54ac66b93b543d09b437af08bba109e</sys_scope>
+        <sys_update_name>sys_ws_operation_3e5a577dafad4fc2b3862551b602cdba</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-07-08 18:26:01</sys_updated_on>
+        <web_service_definition display_value="Omnichannel Intake API">9fdea53b522b4db79c67f30ab7d8307d</web_service_definition>
+        <web_service_version/>
+    </sys_ws_operation>
+</record_update>

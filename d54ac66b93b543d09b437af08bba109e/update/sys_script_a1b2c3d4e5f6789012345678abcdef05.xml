@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update sys_domain="global" table="sys_script">
+    <sys_script action="INSERT_OR_UPDATE">
+        <abort_action>false</abort_action>
+        <access>package_private</access>
+        <action_delete>false</action_delete>
+        <action_insert>true</action_insert>
+        <action_query>false</action_query>
+        <action_update>true</action_update>
+        <active>true</active>
+        <add_message>false</add_message>
+        <advanced>true</advanced>
+        <change_fields>false</change_fields>
+        <client_callable>false</client_callable>
+        <collection>x_2091449_manage_0_consumer_case</collection>
+        <condition/>
+        <description>Automatically sets escalation_level based on priority: Critical (1) to tier_2, High (2) to tier_1. Never downgrades an existing escalation level.</description>
+        <execute_function>false</execute_function>
+        <filter_condition/>
+        <is_rest>false</is_rest>
+        <message/>
+        <name>Auto Escalation From Priority</name>
+        <order>75</order>
+        <priority>100</priority>
+        <rest_method/>
+        <rest_method_text/>
+        <rest_service/>
+        <rest_service_text/>
+        <rest_variables/>
+        <role_conditions/>
+        <script><![CDATA[/**
+ * Before Insert/Update: Auto-sets escalation_level based on priority.
+ * Never downgrades an existing escalation.
+ *
+ * Priority mapping:
+ *   1 (Critical) -> tier_2 minimum
+ *   2 (High) -> tier_1 minimum
+ *   3-5 (Moderate/Low) -> no change
+ *
+ * Globals: current, previous, gs
+ */
+(function executeRule(current, previous) {
+    var priority = parseInt(current.getValue('priority'), 10) || 4;
+    var currentEscalation = current.getValue('escalation_level') || 'none';
+
+    // Define escalation hierarchy (index = severity rank, higher = more severe)
+    var hierarchy = ['none', 'tier_1', 'tier_2', 'tier_3', 'management'];
+    var currentRank = hierarchy.indexOf(currentEscalation);
+    if (currentRank < 0) {
+        currentRank = 0;
+    }
+
+    var requiredRank = 0;
+    if (priority == 1) {
+        requiredRank = 2; // tier_2
+    } else if (priority == 2) {
+        requiredRank = 1; // tier_1
+    }
+
+    // Only escalate UP, never down
+    if (requiredRank > currentRank) {
+        current.setValue('escalation_level', hierarchy[requiredRank]);
+    }
+})(current, previous);
+]]></script>
+        <sys_class_name>sys_script</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-07-11 10:08:52</sys_created_on>
+        <sys_domain>global</sys_domain>
+        <sys_domain_path>/</sys_domain_path>
+        <sys_id>a1b2c3d4e5f6789012345678abcdef05</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>Auto Escalation From Priority</sys_name>
+        <sys_overrides/>
+        <sys_package display_value="managementsys" source="x_2091449_manage_0">d54ac66b93b543d09b437af08bba109e</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="managementsys">d54ac66b93b543d09b437af08bba109e</sys_scope>
+        <sys_update_name>sys_script_a1b2c3d4e5f6789012345678abcdef05</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-07-11 10:08:52</sys_updated_on>
+        <template/>
+        <when>before</when>
+    </sys_script>
+    <sys_translated_text action="delete_multiple" query="documentkey=a1b2c3d4e5f6789012345678abcdef05"/>
+</record_update>

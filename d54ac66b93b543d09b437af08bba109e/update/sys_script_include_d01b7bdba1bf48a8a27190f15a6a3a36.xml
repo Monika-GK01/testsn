@@ -1,0 +1,236 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_script_include">
+    <sys_script_include action="INSERT_OR_UPDATE">
+        <access>public</access>
+        <active>true</active>
+        <api_name>x_2091449_manage_0.OmnichannelIntakeProcessor</api_name>
+        <caller_access/>
+        <client_callable>false</client_callable>
+        <description>Processes omnichannel complaint intake - creates/updates Consumer Cases with deduplication and interaction logging</description>
+        <mobile_callable>false</mobile_callable>
+        <name>OmnichannelIntakeProcessor</name>
+        <sandbox_callable>false</sandbox_callable>
+        <script><![CDATA[var OmnichannelIntakeProcessor = Class.create();
+OmnichannelIntakeProcessor.prototype = {
+    initialize: function() {
+        this.CASE_TABLE = 'x_2091449_manage_0_consumer_case';
+        this.INTERACTION_TABLE = 'x_2091449_manage_0_channel_interaction';
+        this.DEDUP_WINDOW_MINUTES = 60; // Time window for deduplication
+    },
+
+    /**
+     * Main entry point for processing an omnichannel complaint
+     * @param {Object} payload - The intake payload
+     * @returns {Object} Result with case number and interaction ID
+     */
+    processIntake: function(payload) {
+        var channel = payload.channel || '';
+        var customerEmail = payload.customer_email || '';
+        var customerName = payload.customer_name || '';
+        var correlationId = payload.correlation_id || '';
+        var description = payload.description || '';
+        var shortDescription = payload.short_description || '';
+        var channelDetail = payload.channel_detail || '';
+        var interactionType = payload.interaction_type || 'complaint';
+        var sourceReference = payload.source_reference || '';
+        var sentiment = payload.sentiment || 'neutral';
+        var customerPhone = payload.customer_phone || '';
+        var agentName = payload.agent_name || '';
+
+        // Step 1: Check for duplicate/existing case
+        var existingCaseSysId = this._findExistingCase(correlationId, customerEmail, shortDescription);
+
+        var caseSysId;
+        var caseNumber;
+        var isNewCase;
+
+        if (existingCaseSysId) {
+            // Update existing case
+            caseSysId = existingCaseSysId;
+            caseNumber = this._updateExistingCase(caseSysId, channel, description, channelDetail);
+            isNewCase = false;
+        } else {
+            // Create new case
+            var caseResult = this._createNewCase(payload);
+            caseSysId = caseResult.sys_id;
+            caseNumber = caseResult.number;
+            isNewCase = true;
+        }
+
+        // Step 2: Log the channel interaction
+        var interactionSysId = this._logInteraction({
+            case_sys_id: caseSysId,
+            channel: channel,
+            interaction_type: interactionType,
+            source_reference: sourceReference,
+            customer_name: customerName,
+            customer_email: customerEmail,
+            customer_phone: customerPhone,
+            message_body: description,
+            sentiment: sentiment,
+            agent_name: agentName,
+            short_description: shortDescription || 'Interaction via ' + channel
+        });
+
+        return {
+            success: true,
+            case_sys_id: caseSysId,
+            case_number: caseNumber,
+            interaction_sys_id: interactionSysId,
+            is_new_case: isNewCase,
+            channel: channel
+        };
+    },
+
+    /**
+     * Find an existing case by correlation_id or customer email within time window
+     */
+    _findExistingCase: function(correlationId, customerEmail, shortDescription) {
+        // Priority 1: Match by correlation_id (strongest dedup)
+        if (correlationId) {
+            var gr = new GlideRecord(this.CASE_TABLE);
+            gr.addQuery('correlation_id', correlationId);
+            gr.addActiveQuery();
+            gr.setLimit(1);
+            gr.orderByDesc('sys_created_on');
+            gr.query();
+            if (gr.next()) {
+                return gr.getUniqueValue();
+            }
+        }
+
+        // Priority 2: Match by email + similar description within time window
+        if (customerEmail) {
+            var gr2 = new GlideRecord(this.CASE_TABLE);
+            gr2.addQuery('customer_email', customerEmail);
+            gr2.addActiveQuery();
+            // Only look at cases created within the dedup window
+            var windowStart = new GlideDateTime();
+            windowStart.addSeconds(-1 * this.DEDUP_WINDOW_MINUTES * 60);
+            gr2.addQuery('sys_created_on', '>=', windowStart.getValue());
+            gr2.setLimit(1);
+            gr2.orderByDesc('sys_created_on');
+            gr2.query();
+            if (gr2.next()) {
+                return gr2.getUniqueValue();
+            }
+        }
+
+        return null;
+    },
+
+    /**
+     * Create a new Consumer Case
+     */
+    _createNewCase: function(payload) {
+        var gr = new GlideRecord(this.CASE_TABLE);
+        gr.initialize();
+        gr.setValue('short_description', payload.short_description || 'Complaint via ' + payload.channel);
+        gr.setValue('description', payload.description || '');
+        gr.setValue('customer_name', payload.customer_name || '');
+        gr.setValue('customer_email', payload.customer_email || '');
+        gr.setValue('customer_phone', payload.customer_phone || '');
+        gr.setValue('channel', payload.channel || '');
+        gr.setValue('channel_detail', payload.channel_detail || '');
+        gr.setValue('correlation_id', payload.correlation_id || '');
+        gr.setValue('interaction_count', 1);
+        gr.setValue('priority', payload.priority || 3);
+
+        if (payload.complaint_category) {
+            gr.setValue('complaint_category', payload.complaint_category);
+        }
+        if (payload.product_category) {
+            gr.setValue('product_category', payload.product_category);
+        }
+        if (payload.retail_store) {
+            gr.setValue('retail_store', payload.retail_store);
+        }
+
+        var sysId = gr.insert();
+        return {
+            sys_id: sysId,
+            number: gr.getValue('number')
+        };
+    },
+
+    /**
+     * Update an existing Consumer Case with new interaction info
+     */
+    _updateExistingCase: function(caseSysId, channel, newDescription, channelDetail) {
+        var gr = new GlideRecord(this.CASE_TABLE);
+        if (gr.get(caseSysId)) {
+            // Increment interaction count
+            var currentCount = parseInt(gr.getValue('interaction_count') || '0', 10);
+            gr.setValue('interaction_count', currentCount + 1);
+
+            // Append to work notes
+            gr.work_notes = 'Additional contact received via ' + channel + ': ' + newDescription;
+
+            // Update channel detail if provided
+            if (channelDetail) {
+                gr.setValue('channel_detail', channelDetail);
+            }
+
+            gr.update();
+            return gr.getValue('number');
+        }
+        return '';
+    },
+
+    /**
+     * Log a channel interaction record
+     */
+    _logInteraction: function(data) {
+        var gr = new GlideRecord(this.INTERACTION_TABLE);
+        gr.initialize();
+        gr.setValue('consumer_case', data.case_sys_id);
+        gr.setValue('short_description', data.short_description);
+        gr.setValue('channel', data.channel);
+        gr.setValue('interaction_type', data.interaction_type);
+        gr.setValue('source_reference', data.source_reference);
+        gr.setValue('customer_name', data.customer_name);
+        gr.setValue('customer_email', data.customer_email);
+        gr.setValue('customer_phone', data.customer_phone);
+        gr.setValue('message_body', data.message_body);
+        gr.setValue('sentiment', data.sentiment);
+        gr.setValue('agent_name', data.agent_name || '');
+        gr.setValue('processed', true);
+
+        return gr.insert();
+    },
+
+    /**
+     * Process email-based intake (called from Inbound Email Action)
+     */
+    processEmailIntake: function(email) {
+        var payload = {
+            channel: 'email',
+            customer_email: email.from || '',
+            customer_name: email.from_name || email.from || '',
+            short_description: email.subject || 'Email Complaint',
+            description: email.body_text || '',
+            correlation_id: '', // Emails use subject/sender dedup
+            interaction_type: 'complaint',
+            source_reference: 'email:' + (email.uid || ''),
+            sentiment: 'neutral'
+        };
+
+        return this.processIntake(payload);
+    },
+
+    type: 'OmnichannelIntakeProcessor'
+};
+]]></script>
+        <sys_class_name>sys_script_include</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-07-08 18:25:59</sys_created_on>
+        <sys_id>d01b7bdba1bf48a8a27190f15a6a3a36</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>OmnichannelIntakeProcessor</sys_name>
+        <sys_package display_value="managementsys" source="x_2091449_manage_0">d54ac66b93b543d09b437af08bba109e</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="managementsys">d54ac66b93b543d09b437af08bba109e</sys_scope>
+        <sys_update_name>sys_script_include_d01b7bdba1bf48a8a27190f15a6a3a36</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-07-08 18:25:59</sys_updated_on>
+    </sys_script_include>
+</record_update>

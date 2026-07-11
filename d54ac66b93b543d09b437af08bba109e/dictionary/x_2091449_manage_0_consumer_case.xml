@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?><database>
+    <element db_object_id="971810cdd6644f4893ec76b990e72f42" extends="task" label="Consumer Case" name="x_2091449_manage_0_consumer_case" type="collection">
+        <element label="Satisfaction Score" max_length="40" name="satisfaction_score" type="integer"/>
+        <element label="Customer Phone" max_length="40" name="customer_phone" type="string"/>
+        <element label="Resolution Notes" max_length="4000" name="resolution_notes" type="string"/>
+        <element label="Product Category" max_length="32" name="product_category" reference="x_2091449_manage_0_product_category" type="reference"/>
+        <element choice="1" label="Resolution Code" max_length="40" name="resolution_code" type="choice">
+            <choice>
+                <element inactive_on_update="false" label="Replaced" sequence="1" value="replaced"/>
+                <element inactive_on_update="false" label="No Action" sequence="4" value="no_action"/>
+                <element inactive_on_update="false" label="Pending" sequence="5" value="pending"/>
+                <element inactive_on_update="false" label="Refunded" sequence="2" value="refunded"/>
+                <element inactive_on_update="false" label="Escalated" sequence="3" value="escalated"/>
+                <element inactive_on_update="false" label="Resolved" sequence="0" value="resolved"/>
+            </choice>
+        </element>
+        <element label="Customer Name" mandatory="true" max_length="200" name="customer_name" type="string"/>
+        <element label="Complaint Category" max_length="32" name="complaint_category" reference="x_2091449_manage_0_complaint_category" type="reference"/>
+        <element default="1" label="Interaction Count" max_length="40" name="interaction_count" type="integer"/>
+        <element label="Retail Store" max_length="32" name="retail_store" reference="x_2091449_manage_0_retail_store" type="reference"/>
+        <element choice="1" default="none" label="Escalation Level" max_length="40" name="escalation_level" type="choice">
+            <choice>
+                <element inactive_on_update="false" label="Tier 3" sequence="3" value="tier_3"/>
+                <element inactive_on_update="false" label="Management" sequence="4" value="management"/>
+                <element inactive_on_update="false" label="Tier 1" sequence="1" value="tier_1"/>
+                <element inactive_on_update="false" label="Tier 2" sequence="2" value="tier_2"/>
+                <element inactive_on_update="false" label="None" sequence="0" value="none"/>
+            </choice>
+        </element>
+        <element choice="1" label="Channel" max_length="40" name="channel" type="choice">
+            <choice>
+                <element inactive_on_update="false" label="X (Twitter)" sequence="9" value="twitter"/>
+                <element inactive_on_update="false" label="WhatsApp" sequence="7" value="whatsapp"/>
+                <element inactive_on_update="false" label="Chatbot" sequence="6" value="chatbot"/>
+                <element inactive_on_update="false" label="Email" sequence="4" value="email"/>
+                <element inactive_on_update="false" label="Call Center" sequence="3" value="call_center"/>
+                <element inactive_on_update="false" label="Instagram" sequence="8" value="instagram"/>
+                <element inactive_on_update="false" label="Physical Store" sequence="2" value="physical_store"/>
+                <element inactive_on_update="false" label="Website" sequence="0" value="website"/>
+                <element inactive_on_update="false" label="Marketplace" sequence="10" value="marketplace"/>
+                <element inactive_on_update="false" label="Live Chat" sequence="5" value="live_chat"/>
+                <element inactive_on_update="false" label="Mobile App" sequence="1" value="mobile_app"/>
+            </choice>
+        </element>
+        <element label="Channel Detail" max_length="500" name="channel_detail" type="string"/>
+        <element label="Customer Email" max_length="100" name="customer_email" type="email"/>
+    </element>
+</database>

@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sp_widget">
+    <sp_widget action="INSERT_OR_UPDATE">
+        <category>custom</category>
+        <client_script><![CDATA[api.controller = function() {
+  var c = this;
+  c.data = c.data || {};
+};
+]]></client_script>
+        <controller_as>c</controller_as>
+        <css>.sp-card-grid {
+  display: flex;
+  flex-wrap: wrap;
+}
+.sp-card-grid &gt; [class*="col-"] {
+  display: flex;
+  margin-bottom: 24px;
+}
+.sp-stat-tile {
+  background: $background-primary;
+  border: 1px solid $border-tertiary;
+  border-radius: $border-radius-large;
+  padding: 24px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  width: 100%;
+  box-shadow: 0 1px 3px rgba($text-color, 0.06);
+}
+.sp-stat-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: $border-radius-large;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  flex-shrink: 0;
+}
+.sp-stat-icon-info {
+  background: $state-info-bg;
+  color: $brand-info;
+}
+.sp-stat-icon-success {
+  background: $state-success-bg;
+  color: $brand-success;
+}
+.sp-stat-icon-warning {
+  background: $state-warning-bg;
+  color: $brand-warning;
+}
+.sp-stat-icon-danger {
+  background: $state-danger-bg;
+  color: $brand-danger;
+}
+.sp-stat-value {
+  font-size: 32px;
+  font-weight: 700;
+  color: $text-color;
+  line-height: 1;
+}
+.sp-stat-label {
+  font-size: 12px;
+  color: $text-muted;
+  margin-top: 4px;
+}
+</css>
+        <data_table>sp_instance</data_table>
+        <demo_data/>
+        <description/>
+        <docs/>
+        <field_list/>
+        <has_preview>false</has_preview>
+        <id>x_2091449_manage_0_case_stats_widget</id>
+        <internal>false</internal>
+        <link><![CDATA[function link(scope, element, attrs, controller) {
+}]]></link>
+        <name>Consumer Case Stats</name>
+        <option_schema/>
+        <public>false</public>
+        <roles/>
+        <script><![CDATA[(function() {
+  data.stats = [];
+
+  try {
+    var tableName = 'x_2091449_manage_0_consumer_case';
+
+    // Total Cases
+    var totalGa = new GlideAggregate(tableName);
+    totalGa.addAggregate('COUNT');
+    totalGa.setLimit(1);
+    totalGa.query();
+    var totalCount = 0;
+    if (totalGa.next()) {
+      totalCount = parseInt(totalGa.getAggregate('COUNT')) || 0;
+    }
+    data.stats.push({ label: 'Total Cases', value: totalCount, icon: 'glyphicon-folder-open', type: 'info' });
+
+    // Open Cases (state = 1 or 2)
+    var openGa = new GlideAggregate(tableName);
+    openGa.addAggregate('COUNT');
+    openGa.addQuery('state', 'IN', '1,2');
+    openGa.setLimit(1);
+    openGa.query();
+    var openCount = 0;
+    if (openGa.next()) {
+      openCount = parseInt(openGa.getAggregate('COUNT')) || 0;
+    }
+    data.stats.push({ label: 'Open Cases', value: openCount, icon: 'glyphicon-inbox', type: 'warning' });
+
+    // Resolved Cases (state = 3)
+    var resolvedGa = new GlideAggregate(tableName);
+    resolvedGa.addAggregate('COUNT');
+    resolvedGa.addQuery('state', '3');
+    resolvedGa.setLimit(1);
+    resolvedGa.query();
+    var resolvedCount = 0;
+    if (resolvedGa.next()) {
+      resolvedCount = parseInt(resolvedGa.getAggregate('COUNT')) || 0;
+    }
+    data.stats.push({ label: 'Resolved Cases', value: resolvedCount, icon: 'glyphicon-ok-circle', type: 'success' });
+
+    // Critical Cases (priority = 1)
+    var critGa = new GlideAggregate(tableName);
+    critGa.addAggregate('COUNT');
+    critGa.addQuery('priority', '1');
+    critGa.addQuery('active', true);
+    critGa.setLimit(1);
+    critGa.query();
+    var critCount = 0;
+    if (critGa.next()) {
+      critCount = parseInt(critGa.getAggregate('COUNT')) || 0;
+    }
+    data.stats.push({ label: 'Critical Cases', value: critCount, icon: 'glyphicon-exclamation-sign', type: 'danger' });
+
+  } catch (e) {
+    gs.error('Case Stats widget error: ' + e.message);
+  }
+})();
+]]></script>
+        <servicenow>false</servicenow>
+        <sys_class_name>sp_widget</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-07-11 15:40:48</sys_created_on>
+        <sys_id>0685e636ce8344cca28ce48d9ebf3b00</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>Consumer Case Stats</sys_name>
+        <sys_package display_value="managementsys" source="x_2091449_manage_0">d54ac66b93b543d09b437af08bba109e</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="managementsys">d54ac66b93b543d09b437af08bba109e</sys_scope>
+        <sys_update_name>sp_widget_0685e636ce8344cca28ce48d9ebf3b00</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-07-11 15:40:48</sys_updated_on>
+        <template><![CDATA[<div class="row sp-card-grid">
+  <div class="col-md-3 col-sm-6 col-xs-12" ng-repeat="stat in c.data.stats track by $index">
+    <div class="sp-stat-tile">
+      <div class="sp-stat-icon sp-stat-icon-{{stat.type}}">
+        <span class="glyphicon {{stat.icon}}"></span>
+      </div>
+      <div class="sp-stat-body">
+        <div class="sp-stat-value">{{stat.value}}</div>
+        <div class="sp-stat-label">{{stat.label}}</div>
+      </div>
+    </div>
+  </div>
+</div>
+]]></template>
+    </sp_widget>
+</record_update>

@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update sys_domain="global" table="sys_script">
+    <sys_script action="INSERT_OR_UPDATE">
+        <abort_action>false</abort_action>
+        <access>package_private</access>
+        <action_delete>false</action_delete>
+        <action_insert>false</action_insert>
+        <action_query>false</action_query>
+        <action_update>true</action_update>
+        <active>true</active>
+        <add_message>false</add_message>
+        <advanced>true</advanced>
+        <change_fields>false</change_fields>
+        <client_callable>false</client_callable>
+        <collection>x_2091449_manage_0_consumer_case</collection>
+        <condition/>
+        <description>Automatically populates the closed_at timestamp when state transitions to Resolved (3), Closed Incomplete (4), or Closed (7). Clears it if case is reopened.</description>
+        <execute_function>false</execute_function>
+        <filter_condition table="x_2091449_manage_0_consumer_case">stateVALCHANGES<item endquery="false" field="state" goto="false" newquery="false" operator="VALCHANGES" or="false" value=""/>
+        </filter_condition>
+        <is_rest>false</is_rest>
+        <message/>
+        <name>Set Resolution Timestamp</name>
+        <order>50</order>
+        <priority>100</priority>
+        <rest_method/>
+        <rest_method_text/>
+        <rest_service/>
+        <rest_service_text/>
+        <rest_variables/>
+        <role_conditions/>
+        <script><![CDATA[/**
+ * Before Update: Populates closed_at (Resolution Timestamp) when State changes to
+ * Resolved (3), Closed Incomplete (4), or Closed Skipped (7).
+ * Globals: current, previous, gs
+ */
+(function executeRule(current, previous) {
+    var newState = current.getValue('state');
+    var oldState = previous.getValue('state');
+
+    // Only act if state actually changed
+    if (newState == oldState) {
+        return;
+    }
+
+    // Resolved or Closed states: 3 (Closed Complete), 4 (Closed Incomplete), 7 (Closed Skipped)
+    if (newState == '3' || newState == '4' || newState == '7') {
+        // Only set if not already set (avoid overwriting on re-close)
+        if (!current.getValue('closed_at')) {
+            current.setValue('closed_at', new GlideDateTime().getDisplayValue());
+        }
+    }
+
+    // If reopening (moving from a closed state to an open state), clear the timestamp
+    if ((oldState == '3' || oldState == '4' || oldState == '7') &&
+        (newState == '1' || newState == '2' || newState == '-5')) {
+        current.setValue('closed_at', '');
+    }
+})(current, previous);
+]]></script>
+        <sys_class_name>sys_script</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-07-11 10:08:52</sys_created_on>
+        <sys_domain>global</sys_domain>
+        <sys_domain_path>/</sys_domain_path>
+        <sys_id>a1b2c3d4e5f6789012345678abcdef04</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>Set Resolution Timestamp</sys_name>
+        <sys_overrides/>
+        <sys_package display_value="managementsys" source="x_2091449_manage_0">d54ac66b93b543d09b437af08bba109e</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="managementsys">d54ac66b93b543d09b437af08bba109e</sys_scope>
+        <sys_update_name>sys_script_a1b2c3d4e5f6789012345678abcdef04</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-07-11 10:08:52</sys_updated_on>
+        <template/>
+        <when>before</when>
+    </sys_script>
+    <sys_translated_text action="delete_multiple" query="documentkey=a1b2c3d4e5f6789012345678abcdef04"/>
+</record_update>
